@@ -109,15 +109,14 @@ public class EMCRegistry {
     }
 
     private static void initializeLazyValues() {
-        setEMC(Blocks.cobblestone, 1);
-        setEMC(Blocks.stone, 1);
+        setEMC_wild(Blocks.cobblestone, 1);
         setEMC(Blocks.netherrack, 1);
-        setEMC(Blocks.dirt, 1);
+        setEMC_wild(Blocks.dirt, 1);
         setEMC(Blocks.grass, 1);
         setEMC(Blocks.mycelium, 1);
-        setEMC(Blocks.leaves, 1);
-        setEMC(Blocks.leaves2, 1);
-        setEMC(Blocks.sand, 1);
+        setEMC_wild(Blocks.leaves, 1);
+        setEMC_wild(Blocks.leaves2, 1);
+        setEMC_wild(Blocks.sand, 1);
         setEMC(Blocks.snow, 1);
         setEMC(Blocks.ice, 1);
         setEMC(Blocks.gravel, 4);
@@ -178,7 +177,7 @@ public class EMCRegistry {
         setEMC(Items.iron_ingot, 256);
         setEMC(Items.gold_ingot, 2048);
         setEMC(Items.flint, 4);
-        setEMC(Items.coal, 128);
+        setEMC_wild(Items.coal, 128);
         setEMC(Items.redstone, 64);
         setEMC(Items.glowstone_dust, 384);
         setEMC(Items.quartz, 256);
