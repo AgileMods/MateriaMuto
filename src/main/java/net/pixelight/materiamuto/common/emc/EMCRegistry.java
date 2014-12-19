@@ -26,6 +26,7 @@ package net.pixelight.materiamuto.common.emc;
 
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -106,6 +107,7 @@ public class EMCRegistry {
         scanFurnaceRecipes(2);
         scanCraftingRecipes(2);
         scanFurnaceRecipes(2);
+        addFinalValues();
     }
 
     private static void initializeLazyValues() {
@@ -131,7 +133,9 @@ public class EMCRegistry {
         setEMC(Items.melon, 16);
         setEMC(Items.clay_ball, 16);
         setEMC(Blocks.waterlily, 16);
-        setEMC(Blocks.yellow_flower, 16);
+        setEMC_wild(Blocks.yellow_flower, 16);
+        setEMC_wild(Blocks.red_flower, 16);
+        setEMC_wild(Blocks.double_plant, 32);
         setEMC(Items.wheat, 24);
         setEMC(Items.nether_wart, 24);
         setEMC(Items.stick, 4);
@@ -188,14 +192,13 @@ public class EMCRegistry {
         setEMC(Items.iron_horse_armor, 1280);
         setEMC(Items.golden_horse_armor, 1024);
         setEMC(Items.diamond_horse_armor, 40960);
-        setEMC(Blocks.tallgrass, 1);
         setEMC(Blocks.packed_ice, 4);
         setEMC(Items.snowball, 1);
         setEMC(Items.filled_map, 1472);
         setEMC(Items.blaze_powder, 768);
         setEMC_wild(Blocks.sapling, 32);
-        setEMC(Blocks.tallgrass, 1);
-        setEMC(Blocks.deadbush, 1);
+        setEMC_wild(Blocks.tallgrass, 1);
+        setEMC_wild(Blocks.deadbush, 1);
         setEMC(Items.diamond, 8192);
 
         // Dye Handling
@@ -313,5 +316,18 @@ public class EMCRegistry {
                 }
             }
         }
+    }
+
+    private static void addFinalValues() {
+        // Stone brick handling
+        double stoneBrickEmc = getEMC(Blocks.stonebrick);
+        for (int i=1; i< BlockStoneBrick.field_150141_b.length; i++) {
+            setEMC(new ItemStack(Blocks.stonebrick, 1, i), stoneBrickEmc);
+        }
+
+        // Anvil handling
+        double anvilEmc = getEMC(new ItemStack(Blocks.anvil, 1, 0));
+        setEMC(new ItemStack(Blocks.anvil, 1, 1), anvilEmc * 0.66D);
+        setEMC(new ItemStack(Blocks.anvil, 1, 2), anvilEmc * 0.33D);
     }
 }
