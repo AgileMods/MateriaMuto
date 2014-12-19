@@ -24,18 +24,16 @@
  */
 package net.pixelight.materiamuto.common.item.rings;
 
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import cpw.mods.fml.common.Optional;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.pixelight.materiamuto.api.IModeChanger;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
 import net.pixelight.materiamuto.common.lib.LibMisc;
 
-@Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemHarvestGodessRing extends MMItem implements IBauble {
+public class ItemHarvestGodessRing extends MMItem implements IModeChanger {
 
     private IIcon iconInactive;
     private IIcon iconActive;
@@ -56,39 +54,25 @@ public class ItemHarvestGodessRing extends MMItem implements IBauble {
         iconActive = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/harvest_god_on");
     }
 
-    @Optional.Method(modid = "Baubles")
     @Override
-    public BaubleType getBaubleType(ItemStack itemstack) {
-        return BaubleType.RING;
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (!world.isRemote) {
+            changeMode(entityPlayer, itemStack);
+        }
+        return itemStack;
     }
 
-    @Optional.Method(modid = "Baubles")
     @Override
-    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-
+    public byte getMode(ItemStack itemStack) {
+        return (byte) itemStack.getItemDamage();
     }
 
-    @Optional.Method(modid = "Baubles")
     @Override
-    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+    public void changeMode(EntityPlayer entityPlayer, ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 0) {
+            itemStack.setItemDamage(1);
+        } else {
+            itemStack.setItemDamage(0);
+        }
     }
 }

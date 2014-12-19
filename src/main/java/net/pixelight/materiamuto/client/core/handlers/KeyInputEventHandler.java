@@ -47,6 +47,8 @@ public class KeyInputEventHandler {
             return LibKey.MODE;
         } else if (Keybindings.release.isPressed()) {
             return LibKey.RELEASE;
+        } else if (Keybindings.toggle.isPressed()) {
+            return LibKey.TOGGLE;
         }
         return LibKey.UNKNOWN;
     }

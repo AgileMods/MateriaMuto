@@ -43,6 +43,7 @@ public class LibMisc {
     public static final String CHARGE = "key.charge";
     public static final String MODE = "key.extra";
     public static final String RELEASE = "key.release";
+    public static final String TOGGLE = "key.toggle";
 
     // Texture Constants
     public static final String RESOURCE_PREFIX = MODID.toLowerCase() + ":";

@@ -29,13 +29,16 @@ import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.pixelight.materiamuto.api.IModeChanger;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
 import net.pixelight.materiamuto.common.lib.LibMisc;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemSoulStone extends MMItem implements IBauble {
+public class ItemSoulStone extends MMItem implements IBauble, IModeChanger {
 
     private IIcon iconInactive;
     private IIcon iconActive;
@@ -54,6 +57,14 @@ public class ItemSoulStone extends MMItem implements IBauble {
     public void registerIcons(IIconRegister register) {
         iconInactive = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/soul_stone_off");
         iconActive = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/soul_stone_on");
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (!world.isRemote) {
+            changeMode(entityPlayer, itemStack);
+        }
+        return itemStack;
     }
 
     @Optional.Method(modid = "Baubles")
@@ -90,5 +101,19 @@ public class ItemSoulStone extends MMItem implements IBauble {
     @Override
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
         return false;
+    }
+
+    @Override
+    public byte getMode(ItemStack itemStack) {
+        return (byte) itemStack.getItemDamage();
+    }
+
+    @Override
+    public void changeMode(EntityPlayer entityPlayer, ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 0) {
+            itemStack.setItemDamage(1);
+        } else {
+            itemStack.setItemDamage(0);
+        }
     }
 }

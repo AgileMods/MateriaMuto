@@ -26,7 +26,7 @@ package net.pixelight.materiamuto.common.core;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.pixelight.materiamuto.MateriaMuto;
-import net.pixelight.materiamuto.common.entity.EntityHoningArrow;
+import net.pixelight.materiamuto.common.entity.EntityHomingArrow;
 import net.pixelight.materiamuto.common.entity.EntityLootBall;
 import net.pixelight.materiamuto.common.lib.LibEntityNames;
 
@@ -35,7 +35,7 @@ public class MMEntities {
     public static void init() {
         int id = 0;
         EntityRegistry.registerModEntity(EntityLootBall.class, LibEntityNames.LOOT_BALL, id++, MateriaMuto.instance, 64, 10, false);
-        EntityRegistry.registerModEntity(EntityHoningArrow.class, LibEntityNames.HONING_ARROW, id++, MateriaMuto.instance, 2048, 50, true);
+        EntityRegistry.registerModEntity(EntityHomingArrow.class, LibEntityNames.HONING_ARROW, id++, MateriaMuto.instance, 2048, 50, true);
 
     }
 }

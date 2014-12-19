@@ -27,15 +27,22 @@ package net.pixelight.materiamuto.common.item.baubles;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.pixelight.materiamuto.api.IKeyBound;
+import net.pixelight.materiamuto.api.IModeChanger;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
+import net.pixelight.materiamuto.common.lib.LibKey;
 import net.pixelight.materiamuto.common.lib.LibMisc;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemBlackHoleBand extends MMItem implements IBauble {
+public class ItemBlackHoleBand extends MMItem implements IBauble, IModeChanger, IKeyBound {
 
     private IIcon iconInactive;
     private IIcon iconActive;
@@ -83,12 +90,32 @@ public class ItemBlackHoleBand extends MMItem implements IBauble {
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
 
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
+
+    @Override
+    public byte getMode(ItemStack itemStack) {
+        return (byte) itemStack.getItemDamage();
+    }
+
+    @Override
+    public void changeMode(EntityPlayer entityPlayer, ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 0) {
+            itemStack.setItemDamage(1);
+        } else {
+            itemStack.setItemDamage(0);
+        }
+    }
+
+    @Override
+    public void doKeyAction(EntityPlayer entityPlayer, ItemStack itemStack, LibKey key) {
+
+    }
+
 }

@@ -321,7 +321,7 @@ public class EMCRegistry {
     private static void addFinalValues() {
         // Stone brick handling
         double stoneBrickEmc = getEMC(Blocks.stonebrick);
-        for (int i=1; i< BlockStoneBrick.field_150141_b.length; i++) {
+        for (int i = 1; i < BlockStoneBrick.field_150141_b.length; i++) {
             setEMC(new ItemStack(Blocks.stonebrick, 1, i), stoneBrickEmc);
         }
 

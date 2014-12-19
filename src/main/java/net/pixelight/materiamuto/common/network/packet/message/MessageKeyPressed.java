@@ -41,12 +41,15 @@ public class MessageKeyPressed implements IMessage, IMessageHandler<MessageKeyPr
     }
 
     public MessageKeyPressed(LibKey key) {
+
         if (key == LibKey.CHARGE) {
             this.keyPressed = (byte) LibKey.CHARGE.ordinal();
         } else if (key == LibKey.MODE) {
             this.keyPressed = (byte) LibKey.MODE.ordinal();
         } else if (key == LibKey.RELEASE) {
             this.keyPressed = (byte) LibKey.RELEASE.ordinal();
+        } else if (key == LibKey.TOGGLE) {
+            this.keyPressed = (byte) LibKey.TOGGLE.ordinal();
         } else {
             this.keyPressed = (byte) LibKey.UNKNOWN.ordinal();
         }
@@ -78,6 +81,9 @@ public class MessageKeyPressed implements IMessage, IMessageHandler<MessageKeyPr
             } else if (messageKeyPressed.keyPressed == LibKey.RELEASE.ordinal()) {
                 ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
                         .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.RELEASE);
+            } else if (messageKeyPressed.keyPressed == LibKey.TOGGLE.ordinal()) {
+                ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
+                        .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.TOGGLE);
             }
         }
         return null;

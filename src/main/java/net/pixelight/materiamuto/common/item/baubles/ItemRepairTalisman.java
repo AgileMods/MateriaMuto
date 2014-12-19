@@ -71,12 +71,12 @@ public class ItemRepairTalisman extends MMItem implements IBauble {
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
 
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
 }

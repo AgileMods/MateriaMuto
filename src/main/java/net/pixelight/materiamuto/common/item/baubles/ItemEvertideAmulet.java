@@ -28,7 +28,9 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.pixelight.materiamuto.api.IModeChanger;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
@@ -71,12 +73,13 @@ public class ItemEvertideAmulet extends MMItem implements IBauble {
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
 
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
+
 }

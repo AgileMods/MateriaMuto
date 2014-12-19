@@ -29,16 +29,20 @@ import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.pixelight.materiamuto.api.IModeChanger;
+import net.pixelight.materiamuto.common.core.helpers.MathHelper;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
 import net.pixelight.materiamuto.common.lib.LibMisc;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemSwiftWolfsRendingGale extends MMItem implements IBauble {
+public class ItemSwiftWolfsRendingGale extends MMItem implements IBauble, IModeChanger {
 
     private IIcon iconInactive;
-    private IIcon iconActive;
+    private IIcon[] iconActiveStage;
 
     public ItemSwiftWolfsRendingGale() {
         super();
@@ -47,13 +51,29 @@ public class ItemSwiftWolfsRendingGale extends MMItem implements IBauble {
 
     @Override
     public IIcon getIconFromDamage(int damage) {
-        return damage == 1 ? iconActive : iconInactive;
+        if (damage == 0) {
+            return iconInactive;
+        } else {
+            return iconActiveStage[net.minecraft.util.MathHelper.clamp_int(damage - 1, 0, 2)];
+        }
     }
 
     @Override
     public void registerIcons(IIconRegister register) {
         iconInactive = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/swrg_off");
-        iconActive = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/swrg_on");
+        iconActiveStage = new IIcon[3];
+
+        for (int i = 0; i < 3; i++) {
+            iconActiveStage[i] = register.registerIcon(LibMisc.RESOURCE_PREFIX + "rings/swrg_on" + (i + 1));
+        }
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (!world.isRemote) {
+            changeMode(entityPlayer, itemStack);
+        }
+        return itemStack;
     }
 
     @Optional.Method(modid = "Baubles")
@@ -83,12 +103,30 @@ public class ItemSwiftWolfsRendingGale extends MMItem implements IBauble {
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
     }
 
     @Optional.Method(modid = "Baubles")
     @Override
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public byte getMode(ItemStack itemStack) {
+        return (byte) itemStack.getItemDamage();
+    }
+
+    @Override
+    public void changeMode(EntityPlayer entityPlayer, ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 0) {
+            itemStack.setItemDamage(1);
+        } else if (itemStack.getItemDamage() == 1) {
+            itemStack.setItemDamage(2);
+        } else if (itemStack.getItemDamage() == 2) {
+            itemStack.setItemDamage(3);
+        } else {
+            itemStack.setItemDamage(0);
+        }
     }
 }

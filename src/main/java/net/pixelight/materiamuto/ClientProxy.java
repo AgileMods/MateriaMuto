@@ -24,11 +24,15 @@
  */
 package net.pixelight.materiamuto;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.pixelight.materiamuto.client.core.handlers.ItemTooltipEventHandler;
+import net.pixelight.materiamuto.client.core.handlers.KeyInputEventHandler;
+import net.pixelight.materiamuto.client.core.settings.Keybindings;
 
 public class ClientProxy extends CommonProxy {
 
@@ -37,6 +41,12 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
 
         MinecraftForge.EVENT_BUS.register(new ItemTooltipEventHandler());
+
+        FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
+        ClientRegistry.registerKeyBinding(Keybindings.charge);
+        ClientRegistry.registerKeyBinding(Keybindings.mode);
+        ClientRegistry.registerKeyBinding(Keybindings.release);
+        ClientRegistry.registerKeyBinding(Keybindings.toggle);
     }
 
     @Override

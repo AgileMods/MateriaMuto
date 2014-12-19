@@ -34,6 +34,7 @@ import net.pixelight.materiamuto.common.core.handlers.AlchemicalBagHandler;
 import net.pixelight.materiamuto.common.emc.EMCRegistry;
 import net.pixelight.materiamuto.common.item.MMItems;
 import net.pixelight.materiamuto.common.network.GuiHandler;
+import net.pixelight.materiamuto.common.network.packet.PacketHandler;
 
 public class CommonProxy {
 
@@ -41,6 +42,8 @@ public class CommonProxy {
         MMBlocks.init();
         MMItems.init();
         MMEntities.init();
+
+        PacketHandler.init();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(MateriaMuto.instance, new GuiHandler());
 

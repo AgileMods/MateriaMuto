@@ -24,15 +24,13 @@
  */
 package net.pixelight.materiamuto.common.item.rings;
 
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import cpw.mods.fml.common.Optional;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.pixelight.materiamuto.common.entity.EntityHomingArrow;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
 
-@Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemArchangelSmiteRing extends MMItem implements IBauble {
+public class ItemArchangelSmiteRing extends MMItem {
 
     public ItemArchangelSmiteRing() {
         super();
@@ -40,43 +38,16 @@ public class ItemArchangelSmiteRing extends MMItem implements IBauble {
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        EntityHomingArrow arrow = new EntityHomingArrow(world, entityPlayer, 2.0F);
+        if (!world.isRemote) {
+            world.spawnEntityInWorld(arrow);
+        }
+        return itemStack;
+    }
+
+    @Override
     public String getIcon() {
         return "rings/archangel_smite";
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public BaubleType getBaubleType(ItemStack itemstack) {
-        return BaubleType.RING;
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
-    }
-
-    @Optional.Method(modid = "Baubles")
-    @Override
-    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return false;
     }
 }

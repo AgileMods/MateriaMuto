@@ -25,5 +25,5 @@
 package net.pixelight.materiamuto.common.lib;
 
 public enum LibKey {
-    UNKNOWN, CHARGE, MODE, RELEASE
+    UNKNOWN, CHARGE, MODE, RELEASE, TOGGLE
 }
