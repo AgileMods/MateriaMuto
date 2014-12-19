@@ -115,9 +115,10 @@ public class EMCRegistry {
         setEMC(Blocks.dirt, 1);
         setEMC(Blocks.grass, 1);
         setEMC(Blocks.mycelium, 1);
-        setEMC(Blocks.leaves, 1);
-        setEMC(Blocks.leaves2, 1);
-        setEMC(Blocks.sand, 1);
+        setEMC_wild(Blocks.leaves, 1);
+        setEMC_wild(Blocks.leaves2, 1);
+        setEMC_wild(Blocks.sand, 1);
+        setEMC(Blocks.end_stone, 4);
         setEMC(Blocks.snow, 1);
         setEMC(Blocks.ice, 1);
         setEMC(Blocks.gravel, 4);
@@ -193,6 +194,9 @@ public class EMCRegistry {
         setEMC(Items.snowball, 1);
         setEMC(Items.filled_map, 1472);
         setEMC(Items.blaze_powder, 768);
+        setEMC_wild(Blocks.sapling, 32);
+        setEMC(Blocks.tallgrass, 1);
+        setEMC(Blocks.deadbush, 1);
         setEMC(Items.diamond, 8192);
 
         // Dye Handling
