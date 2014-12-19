@@ -1,0 +1,24 @@
+# Ignore Everything
+/*
+/*/
+*.db
+
+# Except These
+!/.gitignore
+!/src/
+!/gradle/
+!/gradlew
+!/README.md
+!/LICENSE
+!/build.gradle
+!/.travis.yml
+!/build.properties
+!/settings.gradle
+!/HEADER.txt
+!/CONTRIBUTING.md
+!/scripts/
+
+#Exclude the API till I can find a fix for licence headers
+/src/main/java/baubles
+/src/main/java/invtweaks
+/src/main/java/thaumcraft

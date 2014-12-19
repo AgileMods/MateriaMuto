@@ -1,0 +1,14 @@
+[
+{
+	"modid": "MateriaMuto",
+	"name": "Materia Muto",
+	"version": "@VERSION@",
+	"description": "[description pending]",
+	"credits": "CyanideX",
+	"url": "http://www.google.com/",
+	"authors": [ "dmillerw", "Royalixor" ],
+	"dependencies": [
+		"mod_MinecraftForge"
+	]
+}
+]

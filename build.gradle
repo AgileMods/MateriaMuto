@@ -1,0 +1,104 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'sonatype-nexus-public'
+            url = 'https://oss.sonatype.org/content/repositories/public/'
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+    }
+}
+
+// Default tasks
+defaultTasks 'clean', 'licenseFormat', 'build'
+
+// Apply plugins
+apply plugin: 'forge'
+apply plugin: 'license'
+apply plugin: 'maven'
+
+// Basic project information
+group = 'net.pixelight'
+archivesBaseName = 'MateriaMuto'
+version = '0.0.1'
+
+// Extended project information
+ext.projectName = 'MateriaMuto'
+ext.inceptionYear = '2014'
+ext.packaging = 'jar'
+ext.url = 'http://www.agilemods.com'
+ext.description = 'MateriaMuto is an awezome mod.'
+ext.organization = 'AgileMods'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'sonatype-nexus'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (!taskGraph.hasTask(release)) {
+        version += "-SNAPSHOT"
+    } else {
+        version += "-b${System.getenv("BUILD_NUMBER") ?: 0}"
+    }
+}
+
+task release(dependsOn: 'build') << {
+    println 'Release deploy!'
+}
+
+// MinecraftForge version
+minecraft {
+    version = "1.7.10-10.13.2.1230"
+}
+
+// Filter, process, and include resources
+processResources {
+    inputs.property "version", version
+    inputs.property "mcversion", project.minecraft.version
+
+    // Include in final JAR
+    from 'LICENSE'
+
+    // Replace variables
+    from('src/main/resources/mcmod.info') {
+        expand 'modid': project.name.toLowerCase(),
+                'name': project.name,
+                'description': project.description,
+                'version': version,
+                'mcversion': minecraft.version,
+                'url': url,
+                'authorList': organization
+    }
+}
+
+// License header formatting
+license {
+    ext.name = project.name
+    ext.organization = project.organization
+    ext.url = project.url
+    ext.year = project.inceptionYear
+    exclude "**/*.info"
+    exclude "**/*.json"
+    exclude "**/*_at.cfg"
+    exclude "assets/**"
+    header rootProject.file('HEADER.txt')
+    sourceSets = project.sourceSets
+    ignoreFailures false
+    strictCheck true
+}
+
+jar {
+    classifier = 'universal'
+}

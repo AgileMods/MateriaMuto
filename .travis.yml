@@ -1,0 +1,11 @@
+language: java
+notifications:
+  email: false
+install: true
+script:
+  - gradle setupCIWorkspace
+  - gradle build
+  - git diff --exit-code
+matrix:
+  include:
+  - jdk: oraclejdk7
