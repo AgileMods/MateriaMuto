@@ -176,7 +176,7 @@ public class EMCRegistry {
         setEMC(Items.porkchop, 64);
         setEMC(Items.beef, 64);
         setEMC(Items.chicken, 64);
-        setEMC(Items.fish, 64);
+        setEMC_wild(Items.fish, 64);
         setEMC(Items.carrot, 64);
         setEMC(Items.potato, 64);
         setEMC(Items.iron_ingot, 256);
@@ -329,5 +329,10 @@ public class EMCRegistry {
         double anvilEmc = getEMC(new ItemStack(Blocks.anvil, 1, 0));
         setEMC(new ItemStack(Blocks.anvil, 1, 1), anvilEmc * 0.66D);
         setEMC(new ItemStack(Blocks.anvil, 1, 2), anvilEmc * 0.33D);
+
+        // Name tag
+        double string = getEMC(Items.string);
+        double paper = getEMC(Items.paper);
+        setEMC(Items.name_tag, string + paper);
     }
 }
