@@ -29,61 +29,41 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.pixelight.materiamuto.common.lib.LibKey;
 import net.pixelight.materiamuto.api.IKeyBound;
 
 public class MessageKeyPressed implements IMessage, IMessageHandler<MessageKeyPressed, IMessage> {
 
-    private byte keyPressed;
+    private LibKey keyPressed;
 
     public MessageKeyPressed() {
 
     }
 
     public MessageKeyPressed(LibKey key) {
-
-        if (key == LibKey.CHARGE) {
-            this.keyPressed = (byte) LibKey.CHARGE.ordinal();
-        } else if (key == LibKey.MODE) {
-            this.keyPressed = (byte) LibKey.MODE.ordinal();
-        } else if (key == LibKey.RELEASE) {
-            this.keyPressed = (byte) LibKey.RELEASE.ordinal();
-        } else if (key == LibKey.TOGGLE) {
-            this.keyPressed = (byte) LibKey.TOGGLE.ordinal();
-        } else {
-            this.keyPressed = (byte) LibKey.UNKNOWN.ordinal();
-        }
+        this.keyPressed = key;
     }
 
-
-    @Override
-    public void fromBytes(ByteBuf byteBuf) {
-        this.keyPressed = byteBuf.readByte();
-    }
 
     @Override
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeByte(keyPressed);
+        byteBuf.writeByte(keyPressed.ordinal());
+    }
+
+    @Override
+    public void fromBytes(ByteBuf byteBuf) {
+        this.keyPressed = LibKey.values()[byteBuf.readByte()];
     }
 
     @Override
     public IMessage onMessage(MessageKeyPressed messageKeyPressed, MessageContext messageContext) {
         EntityPlayer entityPlayer = messageContext.getServerHandler().playerEntity;
 
-        if (entityPlayer != null && entityPlayer.getCurrentEquippedItem() != null && entityPlayer.getCurrentEquippedItem()
-                .getItem() instanceof IKeyBound) {
-            if (messageKeyPressed.keyPressed == LibKey.CHARGE.ordinal()) {
-                ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
-                        .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.CHARGE);
-            } else if (messageKeyPressed.keyPressed == LibKey.MODE.ordinal()) {
-                ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
-                        .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.MODE);
-            } else if (messageKeyPressed.keyPressed == LibKey.RELEASE.ordinal()) {
-                ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
-                        .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.RELEASE);
-            } else if (messageKeyPressed.keyPressed == LibKey.TOGGLE.ordinal()) {
-                ((IKeyBound) entityPlayer.getCurrentEquippedItem().getItem())
-                        .doKeyAction(entityPlayer, entityPlayer.getCurrentEquippedItem(), LibKey.TOGGLE);
+        if (entityPlayer != null) {
+            ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
+            if (itemStack != null && itemStack.getItem() instanceof IKeyBound && messageKeyPressed.keyPressed != LibKey.UNKNOWN) {
+                ((IKeyBound) itemStack.getItem()).doKeyAction(entityPlayer, itemStack, messageKeyPressed.keyPressed);
             }
         }
         return null;

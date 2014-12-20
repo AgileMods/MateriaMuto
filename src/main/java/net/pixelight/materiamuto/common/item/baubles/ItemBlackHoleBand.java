@@ -27,14 +27,11 @@ package net.pixelight.materiamuto.common.item.baubles;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
 import net.pixelight.materiamuto.api.IKeyBound;
 import net.pixelight.materiamuto.api.IModeChanger;
 import net.pixelight.materiamuto.common.item.prefab.MMItem;
@@ -115,7 +112,8 @@ public class ItemBlackHoleBand extends MMItem implements IBauble, IModeChanger, 
 
     @Override
     public void doKeyAction(EntityPlayer entityPlayer, ItemStack itemStack, LibKey key) {
-
+        if (key == LibKey.MODE) {
+            changeMode(entityPlayer, itemStack);
+        }
     }
-
 }

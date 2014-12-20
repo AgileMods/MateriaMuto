@@ -41,13 +41,13 @@ import net.pixelight.materiamuto.api.IKeyBound;
 public class KeyInputEventHandler {
 
     private static LibKey getPressedKey() {
-        if (Keybindings.charge.isPressed()) {
+        if (Keybindings.charge.getIsKeyPressed()) {
             return LibKey.CHARGE;
-        } else if (Keybindings.mode.isPressed()) {
+        } else if (Keybindings.mode.getIsKeyPressed()) {
             return LibKey.MODE;
-        } else if (Keybindings.release.isPressed()) {
+        } else if (Keybindings.release.getIsKeyPressed()) {
             return LibKey.RELEASE;
-        } else if (Keybindings.toggle.isPressed()) {
+        } else if (Keybindings.toggle.getIsKeyPressed()) {
             return LibKey.TOGGLE;
         }
         return LibKey.UNKNOWN;
@@ -55,7 +55,9 @@ public class KeyInputEventHandler {
 
     @SubscribeEvent
     public void handleKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (getPressedKey() == LibKey.UNKNOWN) {
+        LibKey keyPress = getPressedKey();
+
+        if (keyPress == LibKey.UNKNOWN) {
             return;
         }
 
@@ -66,14 +68,11 @@ public class KeyInputEventHandler {
                     ItemStack currentEquppedItem = entityPlayer.getCurrentEquippedItem();
                     if (currentEquppedItem.getItem() instanceof IKeyBound) {
                         if (entityPlayer.worldObj.isRemote) {
-                            PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(getPressedKey()));
-                        } else {
-                            ((IKeyBound) currentEquppedItem.getItem()).doKeyAction(entityPlayer, currentEquppedItem, getPressedKey());
+                            PacketHandler.INSTANCE.sendToServer(new MessageKeyPressed(keyPress));
                         }
                     }
                 }
             }
         }
     }
-
 }
