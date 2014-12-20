@@ -31,6 +31,7 @@ import com.agilemods.materiamuto.api.emc.StackReference;
 import com.agilemods.materiamuto.common.emc.handler.*;
 import com.agilemods.materiamuto.common.emc.handler.ae2.AE2CraftingHandler;
 import com.agilemods.materiamuto.common.emc.handler.ae2.AE2FacadeHandler;
+import com.agilemods.materiamuto.common.emc.handler.ic2.IC2CraftingHandler;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -167,18 +168,24 @@ public class EMCRegistry {
         registerMiscHandler(new VanillaCraftingHandler(2));
         registerMiscHandler(new FurnaceHandler(2));
         registerMiscHandler(new AE2CraftingHandler(2));
+        registerMiscHandler(new IC2CraftingHandler(2));
         registerMiscHandler(new AE2FacadeHandler());
         registerItemHandler(new FluidHandler());
         registerItemHandler(new DenseOreHandler());
 
+        fireHandlers(EMCRegistryState.PRE);
         fireHandlers(EMCRegistryState.PRE);
 
         initializeLazyValues();
         initializeLazyFluidValues();
 
         fireHandlers(EMCRegistryState.POST_LAZY);
+        fireHandlers(EMCRegistryState.POST_LAZY);
+        fireHandlers(EMCRegistryState.RECIPE);
         fireHandlers(EMCRegistryState.RECIPE);
         fireHandlers(EMCRegistryState.MISC);
+        fireHandlers(EMCRegistryState.MISC);
+        fireHandlers(EMCRegistryState.POST);
         fireHandlers(EMCRegistryState.POST);
 
         addFinalValues();
