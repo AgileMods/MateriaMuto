@@ -27,7 +27,9 @@ public class MathFX {
 
     public static float berp(float start, float end, float value) {
         value = clamp(0, 1, value);
-        value = (float) ((Math.sin(value * Math.PI * (0.2f + 2.5f * value * value * value)) * Math.pow(1f - value, 2.2f) + value) * (1f + (1.2f * (1f - value))));
+        value =
+                (float) ((Math.sin(value * Math.PI * (0.2f + 2.5f * value * value * value)) * Math.pow(1f - value, 2.2f) + value) * (1f + (1.2f * (1f
+                                                                                                                                                   - value))));
         return start + (end - start) * value;
     }
 

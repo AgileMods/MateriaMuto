@@ -61,7 +61,7 @@ public class ContainerCondenser extends Container implements MessageGuiData.IGui
     }
 
     private void sendGuiData(int id, double data) {
-        for (ICrafting crafting : (List<ICrafting>)crafters) {
+        for (ICrafting crafting : (List<ICrafting>) crafters) {
             PacketHandler.INSTANCE.sendTo(new MessageGuiData(id, data), (EntityPlayerMP) crafting);
         }
     }

@@ -16,7 +16,8 @@ public class TileMM extends TileEntity {
 
     }
 
-    public void onBlockBroken() {}
+    public void onBlockBroken() {
+    }
 
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {

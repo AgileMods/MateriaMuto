@@ -51,6 +51,7 @@ public class MessageGuiData implements IMessage, IMessageHandler<MessageGuiData,
     }
 
     public static interface IGuiData {
+
         public void handleData(int id, double data);
     }
 }

@@ -22,7 +22,7 @@ public class RenderTileCondenser extends TileEntitySpecialRenderer {
 //        if (tile.getWorldObj() != null) {
 //            direction = tile.orientation;
 //        } else {
-            direction = ForgeDirection.WEST;
+        direction = ForgeDirection.WEST;
 //        }
 
         GL11.glPushMatrix();

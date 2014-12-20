@@ -31,7 +31,9 @@ public abstract class MMTileBlock extends BlockContainer {
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity != null && tileEntity instanceof TileMM) ((TileMM) tileEntity).onBlockBroken();
+        if (tileEntity != null && tileEntity instanceof TileMM) {
+            ((TileMM) tileEntity).onBlockBroken();
+        }
         super.breakBlock(world, x, y, z, block, meta);
     }
 

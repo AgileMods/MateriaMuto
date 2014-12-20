@@ -38,7 +38,7 @@ public class GuiCondenser extends GuiContainer {
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
         double percentage = Math.min(1.0D, tileCondenser.emc / tileCondenser.targetEmc);
-        int width = (int) Math.min(106, ((float)106 * percentage));
+        int width = (int) Math.min(106, ((float) 106 * percentage));
         this.drawTexturedModalRect(k + PROGRESS_X, l + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, 10);
     }
 

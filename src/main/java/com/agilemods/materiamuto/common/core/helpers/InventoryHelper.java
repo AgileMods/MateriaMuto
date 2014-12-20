@@ -55,7 +55,10 @@ public class InventoryHelper {
                     }
 
                     stack.stackSize -= j1;
-                    EntityItem entityitem = new EntityItem(world, (double) ((float) x + f), (double) ((float) y + f1), (double) ((float) z + f2), new ItemStack(stack.getItem(), j1, stack.getItemDamage()));
+                    EntityItem
+                            entityitem =
+                            new EntityItem(world, (double) ((float) x + f), (double) ((float) y + f1), (double) ((float) z + f2),
+                                           new ItemStack(stack.getItem(), j1, stack.getItemDamage()));
 
                     if (stack.hasTagCompound()) {
                         entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());

@@ -53,18 +53,21 @@ public class TileCondenser extends TileMM implements IInventory {
             if (targetStack != null) {
                 targetEmc = EMCRegistry.getEMC(targetStack);
 
-                for (int i=0; i<TARGET_SLOT; i++) {
+                for (int i = 0; i < TARGET_SLOT; i++) {
                     ItemStack itemStack = getStackInSlot(i);
                     double emc = EMCRegistry.getEMC(itemStack);
 
                     if (itemStack != null && emc > 0 && (this.emc + emc) <= MAX_EMC) {
-                        if (itemStack.isItemEqual(targetStack))
+                        if (itemStack.isItemEqual(targetStack)) {
                             continue;
+                        }
 
                         acted = true;
 
                         itemStack.stackSize--;
-                        if (itemStack.stackSize <= 0) setInventorySlotContents(i, null);
+                        if (itemStack.stackSize <= 0) {
+                            setInventorySlotContents(i, null);
+                        }
                         this.emc += emc;
                         break;
                     }
@@ -107,9 +110,10 @@ public class TileCondenser extends TileMM implements IInventory {
     }
 
     private ItemStack insertStack(ItemStack itemStack) {
-        for (int i=0; i<TARGET_SLOT; i++) {
-            if (itemStack == null || itemStack.stackSize <= 0)
+        for (int i = 0; i < TARGET_SLOT; i++) {
+            if (itemStack == null || itemStack.stackSize <= 0) {
                 return null;
+            }
 
             ItemStack slotStack = getStackInSlot(i);
 
@@ -118,13 +122,15 @@ public class TileCondenser extends TileMM implements IInventory {
                 return null;
             }
 
-            if (!(itemStack.isItemEqual(slotStack)))
+            if (!(itemStack.isItemEqual(slotStack))) {
                 continue;
+            }
 
             int remainingAmount = slotStack.getMaxStackSize() - slotStack.stackSize;
 
-            if (remainingAmount <= 0)
+            if (remainingAmount <= 0) {
                 continue;
+            }
 
             if (itemStack.stackSize <= remainingAmount) {
                 slotStack.stackSize += itemStack.stackSize;

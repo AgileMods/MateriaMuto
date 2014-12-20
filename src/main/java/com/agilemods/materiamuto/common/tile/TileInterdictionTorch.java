@@ -42,7 +42,8 @@ public class TileInterdictionTorch extends TileEntity {
         if (!worldObj.isRemote) {
             List<Entity> entityList = worldObj.getEntitiesWithinAABB(
                     Entity.class,
-                    AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).expand(PUSH_RADIUS, PUSH_RADIUS, PUSH_RADIUS)
+                    AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1)
+                            .expand(PUSH_RADIUS, PUSH_RADIUS, PUSH_RADIUS)
             );
 
             if (entityList != null && !entityList.isEmpty()) {

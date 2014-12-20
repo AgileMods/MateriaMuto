@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -173,7 +174,8 @@ public class TechneModel extends ModelBase implements IModelCustom {
                     ModelRenderer cube = new ModelRenderer(this, shapeName);
                     cube.setTextureOffset(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
                     cube.mirror = mirrored;
-                    cube.addBox(Float.parseFloat(offset[0]), Float.parseFloat(offset[1]), Float.parseFloat(offset[2]), Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
+                    cube.addBox(Float.parseFloat(offset[0]), Float.parseFloat(offset[1]), Float.parseFloat(offset[2]), Integer.parseInt(size[0]),
+                                Integer.parseInt(size[1]), Integer.parseInt(size[2]));
                     cube.setRotationPoint(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 16, Float.parseFloat(position[2]));
                     cube.rotateAngleX = (float) Math.toRadians(Float.parseFloat(rotation[0]));
                     cube.rotateAngleY = (float) Math.toRadians(Float.parseFloat(rotation[1]));
