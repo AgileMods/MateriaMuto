@@ -34,4 +34,3 @@ public class EMCHelper {
         return DECIMAL_FORMAT.format(emc);
     }
 }
-
