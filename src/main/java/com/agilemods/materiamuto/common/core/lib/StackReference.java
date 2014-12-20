@@ -78,7 +78,13 @@ public class StackReference {
             return false;
         }
 
+        if (!valid())
+            return false;
+
         StackReference stackReference = (StackReference) obj;
+
+        if (!stackReference.valid())
+            return false;
 
         if (item.equals(stackReference.item)) {
             if (damage == OreDictionary.WILDCARD_VALUE || stackReference.damage == OreDictionary.WILDCARD_VALUE) {

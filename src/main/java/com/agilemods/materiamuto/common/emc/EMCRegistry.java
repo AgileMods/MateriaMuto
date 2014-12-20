@@ -24,10 +24,14 @@
  */
 package com.agilemods.materiamuto.common.emc;
 
+import com.agilemods.materiamuto.api.IEMCHandler;
 import com.agilemods.materiamuto.common.core.lib.StackReference;
+import com.agilemods.materiamuto.common.emc.provider.DenseOreEMCHandler;
+import com.agilemods.materiamuto.common.emc.provider.FluidEMCHandler;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStoneBrick;
@@ -37,7 +41,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -46,11 +49,26 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EMCRegistry {
 
     private static Map<StackReference, Double> emcMapping = Maps.newHashMap();
     private static Map<String, Double> genericEmcMapping = Maps.newHashMap();
+
+    private static Set<StackReference> blacklist = Sets.newHashSet();
+
+    private static List<IEMCHandler> emcProviders = Lists.newArrayList();
+
+    private static final EMCDelegate emcDelegate = new EMCDelegate();
+
+    public static void blacklist(StackReference stackReference) {
+        blacklist.add(stackReference);
+    }
+
+    public static void addEMCProvider(IEMCHandler emcProvider) {
+        emcProviders.add(emcProvider);
+    }
 
     public static void setEMC(Fluid fluid, double value) {
         setGenericEMC(fluid.getName(), value);
@@ -70,11 +88,11 @@ public class EMCRegistry {
     }
 
     public static void setEMC(Block block, double value) {
-        setEMC(new StackReference(block), value);
+        setEMC(new StackReference(block), value, false);
     }
 
     public static void setEMC(Item item, double value) {
-        setEMC(new StackReference(item), value);
+        setEMC(new StackReference(item), value, false);
     }
 
     public static void setEMC_wild(Block block, double value) {
@@ -86,11 +104,14 @@ public class EMCRegistry {
     }
 
     public static void setEMC(ItemStack itemStack, double value) {
-        setEMC(new StackReference(itemStack), value);
+        setEMC(new StackReference(itemStack), value, false);
     }
 
-    public static void setEMC(StackReference stackReference, double value) {
-        emcMapping.put(stackReference, value);
+    public static void setEMC(StackReference stackReference, double value, boolean force) {
+        if (!blacklist.contains(stackReference)) {
+            if (force) emcMapping.remove(stackReference);
+            emcMapping.put(stackReference, value);
+        }
     }
 
     public static double getEMC(Object object) {
@@ -122,18 +143,26 @@ public class EMCRegistry {
     }
 
     public static double getEMC(StackReference stackReference) {
-        Double value = emcMapping.get(stackReference);
-        return value == null ? 0 : value;
+        if (!blacklist.contains(stackReference)) {
+            Double value = emcMapping.get(stackReference);
+            return value == null ? 0 : value;
+        } else {
+            return 0;
+        }
     }
 
     public static void initialize() {
+        addEMCProvider(new FluidEMCHandler());
+        addEMCProvider(new DenseOreEMCHandler());
+
         initializeLazyValues();
         initializeLazyFluidValues();
+        scanProviders(false);
         scanCraftingRecipes(2);
         scanFurnaceRecipes(2);
         scanCraftingRecipes(2);
         scanFurnaceRecipes(2);
-        scanFluidContainers();
+        scanProviders(true);
         addFinalValues();
     }
 
@@ -183,6 +212,7 @@ public class EMCRegistry {
         setEMC(Items.iron_horse_armor, 1280);
         setEMC(Items.iron_ingot, 256);
         setEMC(Items.leather, 64);
+        setEMC(Items.milk_bucket, 833);
         setEMC(Items.melon, 16);
         setEMC(Items.nether_star, 139264);
         setEMC(Items.nether_wart, 24);
@@ -274,7 +304,7 @@ public class EMCRegistry {
                     for (ItemStack itemStack : ((ShapedRecipes) recipe).recipeItems) {
                         calculated += getEMC(itemStack);
                     }
-                    if (calculated > emc) {
+                    if (emc <= 0 || calculated < emc) {
                         setEMC(result, calculated / result.stackSize);
                     }
                 } else if (recipe instanceof ShapelessRecipes) {
@@ -284,7 +314,7 @@ public class EMCRegistry {
                     for (Object object : ((ShapelessRecipes) recipe).recipeItems) {
                         calculated += getEMC(object);
                     }
-                    if (calculated > emc) {
+                    if (emc <= 0 || calculated < emc) {
                         setEMC(result, calculated / result.stackSize);
                     }
                 } else if (recipe instanceof ShapedOreRecipe) {
@@ -301,7 +331,7 @@ public class EMCRegistry {
                                 calculated += getEMC(object);
                             }
                         }
-                        if (calculated > emc) {
+                        if (emc <= 0 || calculated < emc) {
                             setEMC(result, calculated / result.stackSize);
                         }
                     }
@@ -319,7 +349,7 @@ public class EMCRegistry {
                                 calculated += getEMC(object);
                             }
                         }
-                        if (calculated > emc) {
+                        if (emc <= 0 || calculated < emc) {
                             setEMC(result, calculated / result.stackSize);
                         }
                     }
@@ -343,28 +373,25 @@ public class EMCRegistry {
                 double valueEMC = getEMC(value);
 
                 if (keyEMC > 0 && valueEMC == 0) {
-                    setEMC(value, keyEMC / value.toItemStack().stackSize);
+                    setEMC(value, keyEMC / value.toItemStack().stackSize, false);
                 } else if (keyEMC == 0 && valueEMC > 0) {
-                    setEMC(key, valueEMC * key.toItemStack().stackSize);
+                    setEMC(key, valueEMC * key.toItemStack().stackSize, false);
                 }
             }
         }
     }
 
-    private static void scanFluidContainers() {
-        for (Item item : (Iterable<Item>) GameData.getItemRegistry().iterator()) {
+    private static void scanProviders(boolean doneRecipeCalc) {
+        for (Item item : (Iterable<Item>) GameData.getItemRegistry()) {
             LinkedList<ItemStack> subItems = Lists.newLinkedList();
-            item.getSubItems(item, null, subItems);
+
+            try {
+                item.getSubItems(item, item.getCreativeTab(), subItems);
+            } catch (Exception ignore) {}
 
             for (ItemStack itemStack : subItems) {
-                if (FluidContainerRegistry.isContainer(itemStack)) {
-                    Fluid fluid = FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid();
-                    ItemStack empty = FluidContainerRegistry.drainFluidContainer(itemStack);
-
-                    if (empty != null && fluid != null) {
-                        double emc = getEMC(fluid) + getEMC(empty);
-                        setEMC(itemStack, emc);
-                    }
+                for (IEMCHandler provider : emcProviders) {
+                    provider.handleItem(emcDelegate, itemStack, doneRecipeCalc);
                 }
             }
         }
