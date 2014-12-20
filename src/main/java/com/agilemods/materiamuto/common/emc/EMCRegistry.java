@@ -25,7 +25,10 @@
 package com.agilemods.materiamuto.common.emc;
 
 import com.agilemods.materiamuto.common.core.lib.StackReference;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.init.Blocks;
@@ -33,16 +36,38 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class EMCRegistry {
 
     private static Map<StackReference, Double> emcMapping = Maps.newHashMap();
+    private static Map<String, Double> genericEmcMapping = Maps.newHashMap();
+
+    public static void setEMC(Fluid fluid, double value) {
+        setGenericEMC(fluid.getName(), value);
+    }
+
+    public static double getEMC(Fluid fluid) {
+        return getGenericEMC(fluid.getName());
+    }
+
+    public static void setGenericEMC(String ident, double value) {
+        genericEmcMapping.put(ident, value);
+    }
+
+    public static double getGenericEMC(String ident) {
+        Double value = genericEmcMapping.get(ident);
+        return value == null ? 0 : value;
+    }
 
     public static void setEMC(Block block, double value) {
         setEMC(new StackReference(block), value);
@@ -103,10 +128,12 @@ public class EMCRegistry {
 
     public static void initialize() {
         initializeLazyValues();
+        initializeLazyFluidValues();
         scanCraftingRecipes(2);
         scanFurnaceRecipes(2);
         scanCraftingRecipes(2);
         scanFurnaceRecipes(2);
+        scanFluidContainers();
         addFinalValues();
     }
 
@@ -217,7 +244,8 @@ public class EMCRegistry {
         }
 
         // Also add ore dictionary tags
-        for (StackReference stackReference : emcMapping.keySet()) {
+        ImmutableSet<StackReference> immutableSet = ImmutableSet.copyOf(emcMapping.keySet());
+        for (StackReference stackReference : immutableSet) {
             double emc = getEMC(stackReference);
             ItemStack itemStack = stackReference.toItemStack();
 
@@ -228,6 +256,11 @@ public class EMCRegistry {
                 }
             }
         }
+    }
+
+    private static void initializeLazyFluidValues() {
+        setEMC(FluidRegistry.WATER, 1);
+        setEMC(FluidRegistry.LAVA, 64);
     }
 
     private static void scanCraftingRecipes(int runs) {
@@ -313,6 +346,25 @@ public class EMCRegistry {
                     setEMC(value, keyEMC / value.toItemStack().stackSize);
                 } else if (keyEMC == 0 && valueEMC > 0) {
                     setEMC(key, valueEMC * key.toItemStack().stackSize);
+                }
+            }
+        }
+    }
+
+    private static void scanFluidContainers() {
+        for (Item item : (Iterable<Item>) GameData.getItemRegistry().iterator()) {
+            LinkedList<ItemStack> subItems = Lists.newLinkedList();
+            item.getSubItems(item, null, subItems);
+
+            for (ItemStack itemStack : subItems) {
+                if (FluidContainerRegistry.isContainer(itemStack)) {
+                    Fluid fluid = FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid();
+                    ItemStack empty = FluidContainerRegistry.drainFluidContainer(itemStack);
+
+                    if (empty != null && fluid != null) {
+                        double emc = getEMC(fluid) + getEMC(empty);
+                        setEMC(itemStack, emc);
+                    }
                 }
             }
         }
