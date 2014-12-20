@@ -24,10 +24,13 @@
  */
 package com.agilemods.materiamuto.common.emc;
 
-import com.agilemods.materiamuto.api.IEMCHandler;
-import com.agilemods.materiamuto.common.core.lib.StackReference;
-import com.agilemods.materiamuto.common.emc.provider.DenseOreEMCHandler;
-import com.agilemods.materiamuto.common.emc.provider.FluidEMCHandler;
+import com.agilemods.materiamuto.api.emc.EMCRegistryState;
+import com.agilemods.materiamuto.api.emc.IEMCItemHandler;
+import com.agilemods.materiamuto.api.emc.IEMCMiscHandler;
+import com.agilemods.materiamuto.api.emc.StackReference;
+import com.agilemods.materiamuto.common.emc.handler.*;
+import com.agilemods.materiamuto.common.emc.handler.ae2.AE2CraftingHandler;
+import com.agilemods.materiamuto.common.emc.handler.ae2.AE2FacadeHandler;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -39,15 +42,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +57,8 @@ public class EMCRegistry {
 
     private static Set<StackReference> blacklist = Sets.newHashSet();
 
-    private static List<IEMCHandler> emcProviders = Lists.newArrayList();
+    private static LinkedList<IEMCItemHandler> itemHandlers = Lists.newLinkedList();
+    private static LinkedList<IEMCMiscHandler> miscHandlers = Lists.newLinkedList();
 
     private static final EMCDelegate emcDelegate = new EMCDelegate();
 
@@ -66,8 +66,20 @@ public class EMCRegistry {
         blacklist.add(stackReference);
     }
 
-    public static void addEMCProvider(IEMCHandler emcProvider) {
-        emcProviders.add(emcProvider);
+    public static void registerItemHandler(IEMCItemHandler itemHandler) {
+        itemHandlers.add(itemHandler);
+    }
+
+    public static void registerMiscHandler(IEMCMiscHandler miscHandler) {
+        miscHandlers.add(miscHandler);
+    }
+
+    public static void wipeout() {
+        emcMapping.clear();
+        genericEmcMapping.clear();
+        blacklist.clear();
+        itemHandlers.clear();
+        miscHandlers.clear();
     }
 
     public static void setEMC(Fluid fluid, double value) {
@@ -152,17 +164,23 @@ public class EMCRegistry {
     }
 
     public static void initialize() {
-        addEMCProvider(new FluidEMCHandler());
-        addEMCProvider(new DenseOreEMCHandler());
+        registerMiscHandler(new VanillaCraftingHandler(2));
+        registerMiscHandler(new FurnaceHandler(2));
+        registerMiscHandler(new AE2CraftingHandler(2));
+        registerMiscHandler(new AE2FacadeHandler());
+        registerItemHandler(new FluidHandler());
+        registerItemHandler(new DenseOreHandler());
+
+        fireHandlers(EMCRegistryState.PRE);
 
         initializeLazyValues();
         initializeLazyFluidValues();
-        scanProviders(false);
-        scanCraftingRecipes(2);
-        scanFurnaceRecipes(2);
-        scanCraftingRecipes(2);
-        scanFurnaceRecipes(2);
-        scanProviders(true);
+
+        fireHandlers(EMCRegistryState.POST_LAZY);
+        fireHandlers(EMCRegistryState.RECIPE);
+        fireHandlers(EMCRegistryState.MISC);
+        fireHandlers(EMCRegistryState.POST);
+
         addFinalValues();
     }
 
@@ -293,95 +311,19 @@ public class EMCRegistry {
         setEMC(FluidRegistry.LAVA, 64);
     }
 
-    private static void scanCraftingRecipes(int runs) {
-        List<IRecipe> recipeList = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
-        for (int i = 0; i < runs; i++) {
-            for (IRecipe recipe : recipeList) {
-                if (recipe instanceof ShapedRecipes) {
-                    ItemStack result = recipe.getRecipeOutput();
-                    double emc = getEMC(result);
-                    double calculated = 0;
-                    for (ItemStack itemStack : ((ShapedRecipes) recipe).recipeItems) {
-                        calculated += getEMC(itemStack);
-                    }
-                    if (emc <= 0 || calculated < emc) {
-                        setEMC(result, calculated / result.stackSize);
-                    }
-                } else if (recipe instanceof ShapelessRecipes) {
-                    ItemStack result = recipe.getRecipeOutput();
-                    double emc = getEMC(result);
-                    double calculated = 0;
-                    for (Object object : ((ShapelessRecipes) recipe).recipeItems) {
-                        calculated += getEMC(object);
-                    }
-                    if (emc <= 0 || calculated < emc) {
-                        setEMC(result, calculated / result.stackSize);
-                    }
-                } else if (recipe instanceof ShapedOreRecipe) {
-                    ItemStack result = recipe.getRecipeOutput();
-                    double emc = getEMC(result);
-                    double calculated = 0;
-                    for (Object object : ((ShapedOreRecipe) recipe).getInput()) {
-                        if (object != null) {
-                            if (object instanceof List) {
-                                for (Object object1 : (List) object) {
-                                    calculated += getEMC(object1);
-                                }
-                            } else {
-                                calculated += getEMC(object);
-                            }
-                        }
-                        if (emc <= 0 || calculated < emc) {
-                            setEMC(result, calculated / result.stackSize);
-                        }
-                    }
-                } else if (recipe instanceof ShapelessOreRecipe) {
-                    ItemStack result = recipe.getRecipeOutput();
-                    double emc = getEMC(result);
-                    double calculated = 0;
-                    for (Object object : ((ShapelessOreRecipe) recipe).getInput()) {
-                        if (object != null) {
-                            if (object instanceof List) {
-                                for (Object object1 : (List) object) {
-                                    calculated += getEMC(object1);
-                                }
-                            } else {
-                                calculated += getEMC(object);
-                            }
-                        }
-                        if (emc <= 0 || calculated < emc) {
-                            setEMC(result, calculated / result.stackSize);
-                        }
-                    }
-                }
-            }
-        }
+    private static void fireHandlers(EMCRegistryState state) {
+        fireItemHandlers(state);
+        fireMiscHandlers(state);
     }
 
-    private static void scanFurnaceRecipes(int runs) {
-        Map<ItemStack, ItemStack> recipeMap = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
-        for (int i = 0; i < runs; i++) {
-            for (Map.Entry<ItemStack, ItemStack> entry : recipeMap.entrySet()) {
-                StackReference key = new StackReference(entry.getKey());
-                StackReference value = new StackReference(entry.getValue());
-
-                if (!key.valid() || !value.valid()) {
-                    continue;
-                }
-
-                double keyEMC = getEMC(key);
-                double valueEMC = getEMC(value);
-
-                if (keyEMC > 0 && valueEMC == 0) {
-                    setEMC(value, keyEMC / value.toItemStack().stackSize, false);
-                } else if (keyEMC == 0 && valueEMC > 0) {
-                    setEMC(key, valueEMC * key.toItemStack().stackSize, false);
-                }
+    private static void fireItemHandlers(EMCRegistryState state) {
+        LinkedList<IEMCItemHandler> itemList = Lists.newLinkedList();
+        for (IEMCItemHandler handler : itemHandlers) {
+            if (handler.getInsertionState() == state) {
+                itemList.add(handler);
             }
         }
-    }
 
-    private static void scanProviders(boolean doneRecipeCalc) {
         for (Item item : (Iterable<Item>) GameData.getItemRegistry()) {
             LinkedList<ItemStack> subItems = Lists.newLinkedList();
 
@@ -390,9 +332,17 @@ public class EMCRegistry {
             } catch (Exception ignore) {}
 
             for (ItemStack itemStack : subItems) {
-                for (IEMCHandler provider : emcProviders) {
-                    provider.handleItem(emcDelegate, itemStack, doneRecipeCalc);
+                for (IEMCItemHandler handler : itemHandlers) {
+                    handler.handleItem(emcDelegate, itemStack);
                 }
+            }
+        }
+    }
+
+    private static void fireMiscHandlers(EMCRegistryState state) {
+        for (IEMCMiscHandler handler : miscHandlers) {
+            if (handler.getInsertionState() == state) {
+                handler.handle(emcDelegate);
             }
         }
     }

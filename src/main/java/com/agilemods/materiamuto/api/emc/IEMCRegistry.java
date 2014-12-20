@@ -22,21 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agilemods.materiamuto.client.core.handlers;
+package com.agilemods.materiamuto.api.emc;
 
-import com.agilemods.materiamuto.api.emc.StackReference;
-import com.agilemods.materiamuto.common.emc.EMCHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import com.agilemods.materiamuto.common.emc.EMCRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
-public class ItemTooltipEventHandler {
+public interface IEMCRegistry {
 
-    @SubscribeEvent
-    public void onRenderTooltip(ItemTooltipEvent event) {
-        double emc = EMCRegistry.getEMC(new StackReference(event.itemStack).setNBT(event.itemStack.getTagCompound()));
-        if (emc > 0) {
-            event.toolTip.add("EMC: " + EMCHelper.emcToString(emc));
-        }
-    }
+    public void blacklist(Block block);
+    public void blacklist(Item item);
+    public void blacklist(ItemStack itemStack);
+    public void blacklist(StackReference stackReference);
+
+    public double getEMC(Object object);
+    public double getEMC(Block block);
+    public double getEMC(Item item);
+    public double getEMC(Fluid fluid);
+    public double getEMC(ItemStack itemStack);
+    public double getEMC(StackReference stackReference);
+
+    public void setEMC(Block block, double value);
+    public void setEMC(Item item, double value);
+    public void setEMC(Fluid fluid, double value);
+    public void setEMC(ItemStack itemStack, double value);
+    public void setEMC(StackReference stackReference, double value);
 }

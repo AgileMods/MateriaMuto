@@ -22,30 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agilemods.materiamuto.common.emc.provider;
+package com.agilemods.materiamuto.api.emc;
 
-import com.agilemods.materiamuto.api.IEMCHandler;
-import com.agilemods.materiamuto.api.IEMCRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
-public class FluidEMCHandler implements IEMCHandler {
+/**
+ * @author dmillerw
+ */
+public interface IEMCItemHandler extends IEMCHandler {
 
-    @Override
-    public void handleItem(IEMCRegistry emcRegistry, ItemStack itemStack, boolean finishedRecipeCalc) {
-        if (FluidContainerRegistry.isContainer(itemStack)) {
-            FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemStack);
-
-            if (fluidStack != null) {
-                Fluid fluid = fluidStack.getFluid();
-                ItemStack empty = FluidContainerRegistry.drainFluidContainer(itemStack);
-
-                if (empty != null && fluid != null) {
-                    emcRegistry.setEMC(empty, emcRegistry.getEMC(fluid) + emcRegistry.getEMC(empty));
-                }
-            }
-        }
-    }
+    public void handleItem(IEMCRegistry emcRegistry, ItemStack itemStack);
 }

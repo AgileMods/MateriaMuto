@@ -22,12 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.agilemods.materiamuto.common.core.lib;
+package com.agilemods.materiamuto.api.emc;
 
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class StackReference {
@@ -35,6 +36,8 @@ public class StackReference {
     private String item;
 
     private int damage;
+
+    private NBTTagCompound nbtTagCompound;
 
     public StackReference(Block block) {
         this(Item.getItemFromBlock(block));
@@ -59,8 +62,17 @@ public class StackReference {
         this.damage = damage;
     }
 
+    public StackReference setNBT(NBTTagCompound nbtTagCompound) {
+        this.nbtTagCompound = nbtTagCompound;
+        return this;
+    }
+
     public ItemStack toItemStack() {
-        return new ItemStack(GameData.getItemRegistry().getObject(item), 1, damage);
+        ItemStack itemStack = new ItemStack(GameData.getItemRegistry().getObject(item), 1, damage);
+        if (nbtTagCompound != null) {
+            itemStack.setTagCompound(nbtTagCompound);
+        }
+        return itemStack;
     }
 
     public boolean valid() {
@@ -69,7 +81,13 @@ public class StackReference {
 
     @Override
     public int hashCode() {
-        return valid() ? item.hashCode() : 0;
+        if (valid()) {
+            int result = item.hashCode();
+            result = 31 * result + (nbtTagCompound != null ? nbtTagCompound.hashCode() : 0);
+            return result;
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -88,9 +106,17 @@ public class StackReference {
 
         if (item.equals(stackReference.item)) {
             if (damage == OreDictionary.WILDCARD_VALUE || stackReference.damage == OreDictionary.WILDCARD_VALUE) {
-                return true;
+                if (nbtTagCompound != null && stackReference.nbtTagCompound != null) {
+                    return ItemStack.areItemStackTagsEqual(toItemStack(), stackReference.toItemStack());
+                } else {
+                    return true;
+                }
             } else {
-                return damage == stackReference.damage;
+                if (nbtTagCompound != null && stackReference.nbtTagCompound != null) {
+                    return damage == stackReference.damage && ItemStack.areItemStackTagsEqual(toItemStack(), stackReference.toItemStack());
+                } else {
+                    return damage == stackReference.damage;
+                }
             }
         } else {
             return false;

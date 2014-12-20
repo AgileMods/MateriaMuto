@@ -24,8 +24,8 @@
  */
 package com.agilemods.materiamuto.common.emc;
 
-import com.agilemods.materiamuto.api.IEMCRegistry;
-import com.agilemods.materiamuto.common.core.lib.StackReference;
+import com.agilemods.materiamuto.api.emc.IEMCRegistry;
+import com.agilemods.materiamuto.api.emc.StackReference;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -49,6 +49,16 @@ public class EMCDelegate implements IEMCRegistry {
     }
 
     @Override
+    public void blacklist(StackReference stackReference) {
+        EMCRegistry.blacklist(stackReference);
+    }
+
+    @Override
+    public double getEMC(Object object) {
+        return EMCRegistry.getEMC(object);
+    }
+
+    @Override
     public double getEMC(Block block) {
         return EMCRegistry.getEMC(block);
     }
@@ -69,6 +79,11 @@ public class EMCDelegate implements IEMCRegistry {
     }
 
     @Override
+    public double getEMC(StackReference stackReference) {
+        return EMCRegistry.getEMC(stackReference);
+    }
+
+    @Override
     public void setEMC(Block block, double value) {
         EMCRegistry.setEMC(block, value);
     }
@@ -86,5 +101,10 @@ public class EMCDelegate implements IEMCRegistry {
     @Override
     public void setEMC(ItemStack itemStack, double value) {
         EMCRegistry.setEMC(itemStack, value);
+    }
+
+    @Override
+    public void setEMC(StackReference stackReference, double value) {
+        EMCRegistry.setEMC(stackReference, value, false);
     }
 }
