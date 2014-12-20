@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.pixelight.materiamuto.common.core.helpers.InventoryHelper;
+import net.pixelight.materiamuto.common.core.helpers.MathFX;
 import net.pixelight.materiamuto.common.emc.EMCRegistry;
 import net.pixelight.materiamuto.common.tile.prefab.TileMM;
 
@@ -18,15 +19,40 @@ public class TileCondenser extends TileMM implements IInventory {
     public static final int TARGET_SLOT = 91;
     public static final int INVENTORY_SIZE = 92;
 
+    public static final int ANIMATION_TICK_MIN = 0;
+    public static final int ANIMATION_TICK_MAX = 20;
+
+    private int animationCooldown;
+    public int animationTick;
+
+    public boolean open;
+
     private ItemStack[] inventory = new ItemStack[INVENTORY_SIZE];
 
     public double targetEmc;
+    private double lastEmc;
     public double emc;
 
     @Override
     public void updateEntity() {
+        if (!open) {
+            if (animationTick < ANIMATION_TICK_MAX) {
+                animationTick++;
+            }
+        } else {
+            if (animationTick > ANIMATION_TICK_MIN) {
+                animationTick--;
+            }
+        }
+
         if (!worldObj.isRemote) {
+            if (animationCooldown > 0) {
+                animationCooldown--;
+            }
+
             ItemStack targetStack = getStackInSlot(TARGET_SLOT);
+            boolean acted = false;
+
             if (targetStack != null) {
                 targetEmc = EMCRegistry.getEMC(targetStack);
 
@@ -37,6 +63,8 @@ public class TileCondenser extends TileMM implements IInventory {
                     if (itemStack != null && emc > 0 && (this.emc + emc) <= MAX_EMC) {
                         if (itemStack.isItemEqual(targetStack))
                             continue;
+
+                        acted = true;
 
                         itemStack.stackSize--;
                         if (itemStack.stackSize <= 0) setInventorySlotContents(i, null);
@@ -49,28 +77,36 @@ public class TileCondenser extends TileMM implements IInventory {
                     ItemStack itemStack = targetStack.copy();
                     itemStack.stackSize = 1;
                     if (insertStack(itemStack) == null) {
+                        acted = true;
                         emc -= targetEmc;
                     }
                 }
+
+                if (emc != lastEmc) {
+                    acted = true;
+                    lastEmc = emc;
+                }
+
+                setOpen(acted);
+            } else {
+                setOpen(false);
             }
         }
     }
 
-    @Override
-    public void onBlockBroken() {
-        InventoryHelper.dropContents(this, worldObj, xCoord, yCoord, zCoord);
+    private void setOpen(boolean open) {
+        if (animationCooldown > 0) {
+            return;
+        }
+        if (this.open != open) {
+            this.open = open;
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            animationCooldown = 20 * 15;
+        }
     }
 
-    @Override
-    public void writeCustomNBT(NBTTagCompound nbtTagCompound) {
-        InventoryHelper.writeToNBT(this, nbtTagCompound);
-        nbtTagCompound.setDouble("emc", emc);
-    }
-
-    @Override
-    public void readCustomNBT(NBTTagCompound nbtTagCompound) {
-        InventoryHelper.readFromNBT(this, nbtTagCompound);
-        emc = nbtTagCompound.getDouble("emc");
+    public float getAnimationInterpolation() {
+        return MathFX.sinerp(0F, 1F, ((float) animationTick / (float) ANIMATION_TICK_MAX));
     }
 
     private ItemStack insertStack(ItemStack itemStack) {
@@ -101,6 +137,25 @@ public class TileCondenser extends TileMM implements IInventory {
             }
         }
         return itemStack;
+    }
+
+    @Override
+    public void onBlockBroken() {
+        InventoryHelper.dropContents(this, worldObj, xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbtTagCompound) {
+        InventoryHelper.writeToNBT(this, nbtTagCompound);
+        nbtTagCompound.setDouble("emc", emc);
+        nbtTagCompound.setBoolean("open", open);
+    }
+
+    @Override
+    public void readCustomNBT(NBTTagCompound nbtTagCompound) {
+        InventoryHelper.readFromNBT(this, nbtTagCompound);
+        emc = nbtTagCompound.getDouble("emc");
+        open = nbtTagCompound.getBoolean("open");
     }
 
     @Override

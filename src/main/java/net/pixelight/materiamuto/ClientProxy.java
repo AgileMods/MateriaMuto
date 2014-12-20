@@ -29,10 +29,18 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.pixelight.materiamuto.client.core.handlers.ItemTooltipEventHandler;
 import net.pixelight.materiamuto.client.core.handlers.KeyInputEventHandler;
 import net.pixelight.materiamuto.client.core.settings.Keybindings;
+import net.pixelight.materiamuto.client.model.importer.TechneModelLoader;
+import net.pixelight.materiamuto.client.render.item.RenderItemCondenser;
+import net.pixelight.materiamuto.client.render.tile.RenderTileCondenser;
+import net.pixelight.materiamuto.common.core.MMBlocks;
+import net.pixelight.materiamuto.common.tile.TileCondenser;
 
 public class ClientProxy extends CommonProxy {
 
@@ -47,6 +55,11 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.registerKeyBinding(Keybindings.mode);
         ClientRegistry.registerKeyBinding(Keybindings.release);
         ClientRegistry.registerKeyBinding(Keybindings.toggle);
+
+        AdvancedModelLoader.registerModelHandler(new TechneModelLoader());
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCondenser.class, new RenderTileCondenser());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MMBlocks.condenser), new RenderItemCondenser());
     }
 
     @Override
