@@ -16,7 +16,7 @@ import java.util.List;
 public class VanillaCraftingHandler implements IEMCMiscHandler {
 
     private int runs;
-    
+
     public VanillaCraftingHandler(int runs) {
         this.runs = runs;
     }
@@ -62,7 +62,7 @@ public class VanillaCraftingHandler implements IEMCMiscHandler {
                                 for (Object object1 : (List) object) {
                                     listCalc += emcRegistry.getEMC(object1);
                                 }
-                                calculated += (listCalc / ((List)object).size());
+                                calculated += (listCalc / ((List) object).size());
                             } else {
                                 calculated += emcRegistry.getEMC(object);
                             }
@@ -82,7 +82,7 @@ public class VanillaCraftingHandler implements IEMCMiscHandler {
                                 for (Object object1 : (List) object) {
                                     listCalc += emcRegistry.getEMC(object1);
                                 }
-                                calculated += (listCalc / ((List)object).size());
+                                calculated += (listCalc / ((List) object).size());
                             } else {
                                 calculated += emcRegistry.getEMC(object);
                             }

@@ -12,8 +12,7 @@ public class CommandEMC extends CommandBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 2;
     }
 

@@ -1,104 +1,87 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = 'sonatype-nexus-public'
-            url = 'https://oss.sonatype.org/content/repositories/public/'
-        }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-    }
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT' }
 }
 
-// Default tasks
-defaultTasks 'clean', 'licenseFormat', 'build'
-
-// Apply plugins
 apply plugin: 'forge'
-apply plugin: 'license'
-apply plugin: 'maven'
 
-// Basic project information
-group = 'net.pixelight'
-archivesBaseName = 'MateriaMuto'
-version = '0.0.1'
-
-// Extended project information
-ext.projectName = 'MateriaMuto'
-ext.inceptionYear = '2014'
-ext.packaging = 'jar'
-ext.url = 'http://www.agilemods.com'
-ext.description = 'MateriaMuto is an awezome mod.'
-ext.organization = 'AgileMods'
-
-repositories {
-    mavenCentral()
-    maven {
-        name = 'sonatype-nexus'
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
+ext.buildnumber = 0
+if (System.getenv('BUILD_NUMBER') != null) {
+    project.buildnumber = System.getenv('BUILD_NUMBER')
+} else {
+    logger.lifecycle "No build number detected, setting to 0"
 }
 
-gradle.taskGraph.whenReady { taskGraph ->
-    if (!taskGraph.hasTask(release)) {
-        version += "-SNAPSHOT"
-    } else {
-        version += "-b${System.getenv("BUILD_NUMBER") ?: 0}"
-    }
+group = "com.agilemods"
+archivesBaseName = "MateriaMuto"
+version = "${minecraft_version}-${mod_version}-b${buildnumber}"
+
+if (project.hasProperty('mod_appendix')) {
+    version += "_${project.mod_appendix}"
 }
 
-task release(dependsOn: 'build') << {
-    println 'Release deploy!'
-}
-
-// MinecraftForge version
 minecraft {
-    version = "1.7.10-10.13.2.1230"
+    version = "${minecraft_version}-${forge_version}"
+    runDir = 'run'
+
+    replace "@VERSION@", project.version
+    replaceIn "LibMisc.java"
 }
 
-// Filter, process, and include resources
+configurations {
+    compile.extendsFrom exportedCompile
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+
 processResources {
-    inputs.property "version", version
+    inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // Include in final JAR
-    from 'LICENSE'
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.info'
+        include '**/*.properties'
 
-    // Replace variables
-    from('src/main/resources/mcmod.info') {
-        expand 'modid': project.name.toLowerCase(),
-                'name': project.name,
-                'description': project.description,
-                'version': version,
-                'mcversion': minecraft.version,
-                'url': url,
-                'authorList': organization
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-}
 
-// License header formatting
-license {
-    ext.name = project.name
-    ext.organization = project.organization
-    ext.url = project.url
-    ext.year = project.inceptionYear
-    exclude "**/*.info"
-    exclude "**/*.json"
-    exclude "**/*_at.cfg"
-    exclude "assets/**"
-    header rootProject.file('HEADER.txt')
-    sourceSets = project.sourceSets
-    ignoreFailures false
-    strictCheck true
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+        exclude '**/*.properties'
+    }
 }
 
 jar {
-    classifier = 'universal'
+    from { configurations.exportedCompile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    from { configurations.exportedCompile.collect { it.isDirectory() ? it : zipTree(it) } }
+    classifier = 'dev'
+}
+
+build.dependsOn sourceJar, deobfJar

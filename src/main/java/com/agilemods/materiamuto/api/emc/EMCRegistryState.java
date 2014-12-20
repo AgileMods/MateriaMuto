@@ -1,6 +1,6 @@
 package com.agilemods.materiamuto.api.emc;
 
-public enum  EMCRegistryState {
+public enum EMCRegistryState {
 
     PRE,
     LAZY,

@@ -19,7 +19,8 @@ public class AE2FacadeHandler implements IEMCMiscHandler {
     static {
         try {
             ITEM_FACADE = Class.forName("appeng.items.parts.ItemFacade");
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
     @Override
@@ -34,7 +35,8 @@ public class AE2FacadeHandler implements IEMCMiscHandler {
                 List<ItemStack> facades = Lists.newArrayList();
                 try {
                     facades = (List<ItemStack>) ITEM_FACADE.getDeclaredMethod("getFacades").invoke(item);
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
 
                 for (ItemStack itemStack : facades) {
                     Block block = null;
@@ -42,7 +44,8 @@ public class AE2FacadeHandler implements IEMCMiscHandler {
                     try {
                         block = (Block) ITEM_FACADE.getDeclaredMethod("getBlock", ItemStack.class).invoke(itemStack.getItem(), itemStack);
                         meta = (Integer) ITEM_FACADE.getDeclaredMethod("getMeta", ItemStack.class).invoke(itemStack.getItem(), itemStack);
-                    } catch (Exception ignore) {}
+                    } catch (Exception ignore) {
+                    }
 
                     if (block != null) {
                         emcRegistry.setEMC(new StackReference(itemStack).setNBT(itemStack.getTagCompound()), emcRegistry.getEMC(new ItemStack(block, 1, meta)));

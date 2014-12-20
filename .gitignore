@@ -12,13 +12,6 @@
 !/LICENSE
 !/build.gradle
 !/.travis.yml
-!/build.properties
 !/settings.gradle
-!/HEADER.txt
+!/gradle.properties
 !/CONTRIBUTING.md
-!/scripts/
-
-#Exclude the API till I can find a fix for licence headers
-/src/main/java/baubles
-/src/main/java/invtweaks
-/src/main/java/thaumcraft

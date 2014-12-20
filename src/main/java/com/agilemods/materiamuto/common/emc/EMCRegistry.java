@@ -1,27 +1,3 @@
-/**
- * This file is part of MateriaMuto, licensed under the MIT License (MIT).
- *
- * Copyright (c) AgileMods <http://www.agilemods.com>
- * Copyright (c) contributors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 package com.agilemods.materiamuto.common.emc;
 
 import com.agilemods.materiamuto.api.emc.EMCRegistryState;
@@ -122,7 +98,9 @@ public class EMCRegistry {
 
     public static void setEMC(StackReference stackReference, double value, boolean force) {
         if (!blacklist.contains(stackReference)) {
-            if (force) emcMapping.remove(stackReference);
+            if (force) {
+                emcMapping.remove(stackReference);
+            }
             emcMapping.put(stackReference, value);
         }
     }
@@ -336,7 +314,8 @@ public class EMCRegistry {
 
             try {
                 item.getSubItems(item, item.getCreativeTab(), subItems);
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
 
             for (ItemStack itemStack : subItems) {
                 for (IEMCItemHandler handler : itemHandlers) {

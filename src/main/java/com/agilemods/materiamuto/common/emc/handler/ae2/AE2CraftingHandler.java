@@ -20,7 +20,8 @@ public class AE2CraftingHandler implements IEMCMiscHandler {
         try {
             SHAPED = Class.forName("appeng.recipes.game.ShapedRecipe");
             SHAPELESS = Class.forName("appeng.recipes.game.ShapelessRecipe");
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
     private int runs;
@@ -62,7 +63,7 @@ public class AE2CraftingHandler implements IEMCMiscHandler {
                         for (Object object1 : (List) object) {
                             listCalc += emcRegistry.getEMC(object1);
                         }
-                        calculated += (listCalc / ((List)object).size());
+                        calculated += (listCalc / ((List) object).size());
                     } else if (object.toString().contains("oredictionary")) {
                         String str = object.toString();
                         String oreTag = str.substring(str.indexOf(":") + 1, str.lastIndexOf(":"));
@@ -81,7 +82,8 @@ public class AE2CraftingHandler implements IEMCMiscHandler {
             if (calculated > emc) {
                 emcRegistry.setEMC(result, calculated / result.stackSize);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
     private void handleShapelessRecipe(IEMCRegistry emcRegistry, IRecipe recipe) {
@@ -98,7 +100,7 @@ public class AE2CraftingHandler implements IEMCMiscHandler {
                         for (Object object1 : (List) object) {
                             listCalc += emcRegistry.getEMC(object1);
                         }
-                        calculated += (listCalc / ((List)object).size());
+                        calculated += (listCalc / ((List) object).size());
                     } else if (object.toString().contains("oredictionary")) {
                         String str = object.toString();
                         String oreTag = str.substring(str.indexOf(":") + 1, str.lastIndexOf(":"));
@@ -117,6 +119,7 @@ public class AE2CraftingHandler implements IEMCMiscHandler {
             if (calculated > emc) {
                 emcRegistry.setEMC(result, calculated / result.stackSize);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 }

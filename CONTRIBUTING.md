@@ -12,21 +12,18 @@ You can also download our formatting xml files [here](https://dl.dropboxusercont
     * Windows users of Git can do: `git config --global core.autocrlf true`
 * Column width
   * 80 for Javadocs
-  * 150 for code
-  * Feel free to wrap when it will help with readability
+  * 300 for code
 * Import order
   * Use Google’s, You will have to configure this in your IDE.
     * IntelliJ IDEA: `Settings → Project Settings → Code Style → Java → Imports`
 * Indentation
-  * Use only four spaces for indentations, do not use two spaces
+  * Use only four spaces for indentations, do not use two spaces or tabs.
 * Vertical whitespace
   * Place a blank line before the first member of a class (i.e. after `class Example {`)
   * A line after the last member of a class is encouraged but not required
   * Applies to interfaces, enums, etc. as well
 * File headers
   * File headers must be surrounded in a block comment (`/* */`) and follow the style in other code files.
-* Exceptions
-  * For exceptions that are to be ignored, name the exception variable ignored or ignore
 * Javadocs
   * Do NOT use `@author`
   * End paragraphs with `</p>`

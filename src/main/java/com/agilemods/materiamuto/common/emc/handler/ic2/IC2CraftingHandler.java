@@ -65,13 +65,15 @@ public class IC2CraftingHandler implements IEMCMiscHandler {
                         List<ItemStack> list = Lists.newArrayList();
                         try {
                             list = (List<ItemStack>) object.getClass().getDeclaredMethod("getInputs").invoke(object);
-                        } catch (Exception ignore) {ignore.printStackTrace();}
+                        } catch (Exception ignore) {
+                            ignore.printStackTrace();
+                        }
 
                         for (ItemStack itemStack : list) {
                             calculated += emcRegistry.getEMC(itemStack);
                         }
                     } else if (object instanceof ArrayList<?>) {
-                        for (Object obj : (ArrayList<?>)object) {
+                        for (Object obj : (ArrayList<?>) object) {
                             calculated += emcRegistry.getEMC(obj);
                         }
                     }
@@ -80,7 +82,9 @@ public class IC2CraftingHandler implements IEMCMiscHandler {
             if (emc <= 0) {
                 emcRegistry.setEMC(result, calculated);
             }
-        } catch (Exception ignore) {ignore.printStackTrace();}
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
     }
 
     private void handleShapelessRecipe(IEMCRegistry emcRegistry, IRecipe recipe) {
@@ -97,13 +101,15 @@ public class IC2CraftingHandler implements IEMCMiscHandler {
                         List<ItemStack> list = Lists.newArrayList();
                         try {
                             list = (List<ItemStack>) object.getClass().getDeclaredMethod("getInputs").invoke(object);
-                        } catch (Exception ignore) {ignore.printStackTrace();}
+                        } catch (Exception ignore) {
+                            ignore.printStackTrace();
+                        }
 
                         for (ItemStack itemStack : list) {
                             calculated += emcRegistry.getEMC(itemStack);
                         }
                     } else if (object instanceof ArrayList<?>) {
-                        for (Object obj : (ArrayList<?>)object) {
+                        for (Object obj : (ArrayList<?>) object) {
                             calculated += emcRegistry.getEMC(obj);
                         }
                     }
@@ -112,6 +118,7 @@ public class IC2CraftingHandler implements IEMCMiscHandler {
             if (emc <= 0) {
                 emcRegistry.setEMC(result, calculated);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 }
