@@ -27,5 +27,5 @@ package net.pixelight.materiamuto.common.lib;
 public class LibEntityNames {
 
     public static final String LOOT_BALL = "lootBall";
-    public static final String HONING_ARROW = "honingArrow";
+    public static final String HOMING_ARROW = "homingArrow";
 }

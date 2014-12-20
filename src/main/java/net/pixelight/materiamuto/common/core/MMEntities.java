@@ -35,7 +35,7 @@ public class MMEntities {
     public static void init() {
         int id = 0;
         EntityRegistry.registerModEntity(EntityLootBall.class, LibEntityNames.LOOT_BALL, id++, MateriaMuto.instance, 64, 10, false);
-        EntityRegistry.registerModEntity(EntityHomingArrow.class, LibEntityNames.HONING_ARROW, id++, MateriaMuto.instance, 2048, 50, true);
+        EntityRegistry.registerModEntity(EntityHomingArrow.class, LibEntityNames.HOMING_ARROW, id++, MateriaMuto.instance, 2048, 50, true);
 
     }
 }
