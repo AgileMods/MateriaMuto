@@ -28,18 +28,23 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.pixelight.materiamuto.common.block.BlockCondenser;
 import net.pixelight.materiamuto.common.block.BlockInterdictionTorch;
 import net.pixelight.materiamuto.common.lib.LibBlockNames;
+import net.pixelight.materiamuto.common.tile.TileCondenser;
 import net.pixelight.materiamuto.common.tile.TileInterdictionTorch;
 
 public class MMBlocks {
 
     public static Block interdictionTorch;
+    public static Block condenser;
 
     public static void init() {
         interdictionTorch = new BlockInterdictionTorch().setBlockName(LibBlockNames.INTERDICTION_TORCH);
+        condenser = new BlockCondenser().setBlockName(LibBlockNames.CONDENSER);
 
         register(interdictionTorch, TileInterdictionTorch.class);
+        register(condenser, TileCondenser.class);
     }
 
     private static void register(Block block) {

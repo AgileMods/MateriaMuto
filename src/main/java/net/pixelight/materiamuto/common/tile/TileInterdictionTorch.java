@@ -40,11 +40,11 @@ public class TileInterdictionTorch extends TileEntity {
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote) {
-            List<Entity>
-                    entityList =
-                    worldObj.getEntitiesWithinAABB(Entity.class,
-                                                   AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1)
-                                                           .expand(PUSH_RADIUS, PUSH_RADIUS, PUSH_RADIUS));
+            List<Entity> entityList = worldObj.getEntitiesWithinAABB(
+                    Entity.class,
+                    AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).expand(PUSH_RADIUS, PUSH_RADIUS, PUSH_RADIUS)
+            );
+
             if (entityList != null && !entityList.isEmpty()) {
                 Vec3 tileCoord = Vec3.createVectorHelper(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
                 for (Entity entity : entityList) {

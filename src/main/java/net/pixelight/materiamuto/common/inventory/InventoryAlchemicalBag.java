@@ -28,8 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
+import net.pixelight.materiamuto.common.core.helpers.InventoryHelper;
 import net.pixelight.materiamuto.common.item.MMItems;
 
 public class InventoryAlchemicalBag implements IInventory {
@@ -46,27 +45,11 @@ public class InventoryAlchemicalBag implements IInventory {
     }
 
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        NBTTagList nbtTagList = nbtTagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < nbtTagList.tagCount(); i++) {
-            NBTTagCompound dataTag = nbtTagList.getCompoundTagAt(i);
-            byte slot = dataTag.getByte("slot");
-            ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataTag);
-            setInventorySlotContents(slot, itemStack);
-        }
+        InventoryHelper.readFromNBT(this, nbtTagCompound);
     }
 
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        NBTTagList nbtTagList = new NBTTagList();
-        for (int i = 0; i < getSizeInventory(); i++) {
-            ItemStack itemStack = getStackInSlot(i);
-            if (itemStack != null) {
-                NBTTagCompound dataTag = new NBTTagCompound();
-                itemStack.writeToNBT(dataTag);
-                dataTag.setByte("slot", (byte) i);
-                nbtTagList.appendTag(dataTag);
-            }
-        }
-        nbtTagCompound.setTag("Inventory", nbtTagList);
+        InventoryHelper.writeToNBT(this, nbtTagCompound);
     }
 
     @Override

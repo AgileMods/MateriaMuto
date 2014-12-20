@@ -28,6 +28,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.pixelight.materiamuto.common.lib.LibMisc;
+import net.pixelight.materiamuto.common.network.packet.message.MessageGuiData;
 import net.pixelight.materiamuto.common.network.packet.message.MessageKeyPressed;
 
 public class PacketHandler {
@@ -36,5 +37,6 @@ public class PacketHandler {
 
     public static void init() {
         INSTANCE.registerMessage(MessageKeyPressed.class, MessageKeyPressed.class, 0, Side.SERVER);
+        INSTANCE.registerMessage(MessageGuiData.class, MessageGuiData.class, 1, Side.CLIENT);
     }
 }

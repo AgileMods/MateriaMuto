@@ -29,12 +29,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.pixelight.materiamuto.MateriaMuto;
 import net.pixelight.materiamuto.client.gui.GuiAlchemicalBag;
+import net.pixelight.materiamuto.client.gui.GuiCondenser;
 import net.pixelight.materiamuto.common.inventory.ContainerAlchemicalBag;
+import net.pixelight.materiamuto.common.inventory.ContainerCondenser;
+import net.pixelight.materiamuto.common.tile.TileCondenser;
 
 public class GuiHandler implements IGuiHandler {
 
     public static enum Type {
-        GUI_ALCHEMICAL_CHEST;
+        GUI_ALCHEMICAL_CHEST,
+        GUI_CONDENSER;
 
         public void openGui(EntityPlayer entityPlayer) {
             openGui(entityPlayer, 0, 0, 0);
@@ -64,6 +68,8 @@ public class GuiHandler implements IGuiHandler {
         switch (type) {
             case GUI_ALCHEMICAL_CHEST:
                 return new ContainerAlchemicalBag(entityPlayer, entityPlayer.getHeldItem());
+            case GUI_CONDENSER:
+                return new ContainerCondenser(entityPlayer, (TileCondenser) world.getTileEntity(x, y, z));
         }
         return null;
     }
@@ -74,6 +80,8 @@ public class GuiHandler implements IGuiHandler {
         switch (type) {
             case GUI_ALCHEMICAL_CHEST:
                 return new GuiAlchemicalBag(entityPlayer, entityPlayer.getHeldItem());
+            case GUI_CONDENSER:
+                return new GuiCondenser(entityPlayer, (TileCondenser) world.getTileEntity(x, y, z));
         }
         return null;
     }
