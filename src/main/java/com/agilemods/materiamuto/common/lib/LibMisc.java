@@ -34,9 +34,8 @@ public class LibMisc {
     public static final String DEPENDENCIES = "required-after:Forge@[10.12.2.1230,);";
 
     // Proxy Constants
-    public static final String PROXY_COMMON = "CommonProxy";
-    public static final String PROXY_CLIENT = "ClientProxy";
-    public static final String GUI_FACTORY = "GuiFactory";
+    public static final String PROXY_COMMON = "com.agilemods.materiamuto.CommonProxy";
+    public static final String PROXY_CLIENT = "com.agilemods.materiamuto.ClientProxy";
 
     // Keybindings
     public static final String CATEGORY = "key.categories.mm";
