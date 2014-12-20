@@ -1,4 +1,4 @@
-MateriaMuto
+MateriaMuto [![Build Status](http://ci.agilemods.com/job/MateriaMuto/badge/icon)](http://ci.agilemods.com/job/MateriaMuto/)
 ===============
 
 **Currently not stable and under heavy development!**  
