@@ -69,7 +69,7 @@ public class StackReference {
 
     @Override
     public int hashCode() {
-        return item.hashCode();
+        return valid() ? item.hashCode() : 0;
     }
 
     @Override
