@@ -1,4 +1,4 @@
-MateriaMuto
+MateriaMuto [![Build Status](https://travis-ci.org/AgileMods/MateriaMuto.svg?branch=master)](https://travis-ci.org/AgileMods/MateriaMuto)
 ===============
 
 **Currently not stable and under heavy development!**  
