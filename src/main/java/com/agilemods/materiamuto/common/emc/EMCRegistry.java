@@ -1,18 +1,9 @@
 package com.agilemods.materiamuto.common.emc;
 
-import com.agilemods.materiamuto.api.emc.EMCRegistryState;
-import com.agilemods.materiamuto.api.emc.IEMCItemHandler;
-import com.agilemods.materiamuto.api.emc.IEMCMiscHandler;
 import com.agilemods.materiamuto.api.emc.StackReference;
-import com.agilemods.materiamuto.common.emc.handler.*;
-import com.agilemods.materiamuto.common.emc.handler.ae2.AE2CraftingHandler;
-import com.agilemods.materiamuto.common.emc.handler.ae2.AE2FacadeHandler;
-import com.agilemods.materiamuto.common.emc.handler.ic2.IC2CraftingHandler;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.init.Blocks;
@@ -23,7 +14,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,29 +24,16 @@ public class EMCRegistry {
 
     private static Set<StackReference> blacklist = Sets.newHashSet();
 
-    private static LinkedList<IEMCItemHandler> itemHandlers = Lists.newLinkedList();
-    private static LinkedList<IEMCMiscHandler> miscHandlers = Lists.newLinkedList();
-
     private static final EMCDelegate emcDelegate = new EMCDelegate();
 
     public static void blacklist(StackReference stackReference) {
         blacklist.add(stackReference);
     }
 
-    public static void registerItemHandler(IEMCItemHandler itemHandler) {
-        itemHandlers.add(itemHandler);
-    }
-
-    public static void registerMiscHandler(IEMCMiscHandler miscHandler) {
-        miscHandlers.add(miscHandler);
-    }
-
     public static void wipeout() {
         emcMapping.clear();
         genericEmcMapping.clear();
         blacklist.clear();
-        itemHandlers.clear();
-        miscHandlers.clear();
     }
 
     public static void setEMC(Fluid fluid, double value) {
@@ -143,28 +120,8 @@ public class EMCRegistry {
     }
 
     public static void initialize() {
-        registerMiscHandler(new VanillaCraftingHandler(2));
-        registerMiscHandler(new FurnaceHandler(2));
-        registerMiscHandler(new AE2CraftingHandler(2));
-        registerMiscHandler(new IC2CraftingHandler(2));
-        registerMiscHandler(new AE2FacadeHandler());
-        registerItemHandler(new FluidHandler());
-        registerItemHandler(new DenseOreHandler());
-
-        fireHandlers(EMCRegistryState.PRE);
-        fireHandlers(EMCRegistryState.PRE);
-
         initializeLazyValues();
         initializeLazyFluidValues();
-
-        fireHandlers(EMCRegistryState.POST_LAZY);
-        fireHandlers(EMCRegistryState.POST_LAZY);
-        fireHandlers(EMCRegistryState.RECIPE);
-        fireHandlers(EMCRegistryState.RECIPE);
-        fireHandlers(EMCRegistryState.MISC);
-        fireHandlers(EMCRegistryState.MISC);
-        fireHandlers(EMCRegistryState.POST);
-        fireHandlers(EMCRegistryState.POST);
 
         addFinalValues();
     }
@@ -294,43 +251,6 @@ public class EMCRegistry {
     private static void initializeLazyFluidValues() {
         setEMC(FluidRegistry.WATER, 1);
         setEMC(FluidRegistry.LAVA, 64);
-    }
-
-    private static void fireHandlers(EMCRegistryState state) {
-        fireItemHandlers(state);
-        fireMiscHandlers(state);
-    }
-
-    private static void fireItemHandlers(EMCRegistryState state) {
-        LinkedList<IEMCItemHandler> itemList = Lists.newLinkedList();
-        for (IEMCItemHandler handler : itemHandlers) {
-            if (handler.getInsertionState() == state) {
-                itemList.add(handler);
-            }
-        }
-
-        for (Item item : (Iterable<Item>) GameData.getItemRegistry()) {
-            LinkedList<ItemStack> subItems = Lists.newLinkedList();
-
-            try {
-                item.getSubItems(item, item.getCreativeTab(), subItems);
-            } catch (Exception ignore) {
-            }
-
-            for (ItemStack itemStack : subItems) {
-                for (IEMCItemHandler handler : itemHandlers) {
-                    handler.handleItem(emcDelegate, itemStack);
-                }
-            }
-        }
-    }
-
-    private static void fireMiscHandlers(EMCRegistryState state) {
-        for (IEMCMiscHandler handler : miscHandlers) {
-            if (handler.getInsertionState() == state) {
-                handler.handle(emcDelegate);
-            }
-        }
     }
 
     private static void addFinalValues() {
