@@ -1,4 +1,4 @@
-MateriaMuto [![Build Status](https://travis-ci.org/AgileMods/MateriaMuto.svg?branch=master)](https://travis-ci.org/AgileMods/MateriaMuto) [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+MateriaMuto [![Build Status](https://travis-ci.org/AgileMods/MateriaMuto.svg?branch=master)](https://travis-ci.org/AgileMods/MateriaMuto) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ===============
 
 **Currently not stable and under heavy development!**  
