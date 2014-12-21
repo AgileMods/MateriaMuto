@@ -23,6 +23,6 @@ public class LibItemNames {
     public static final String HARVEST_RING = "harvestGodessRing";
     public static final String IRON_BAND = "ironBand";
     public static final String ELDER_KNOWLEDGE = "elderKnowledge";
-    public static final String ENCHANT_SCROLL = "enchanmentScroll";
+    public static final String ENCHANT_SCROLL = "enchantmentScroll";
 
 }
