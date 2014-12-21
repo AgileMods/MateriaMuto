@@ -45,6 +45,8 @@ item.blackHoleRing.name=Black Hole Band
 item.archangelSmiteRing.name=Archangels Smite
 item.repairTalismanAmulet.name=Repair Talisman
 
+#Enchantment Scroll
+item.enchantmentScroll.name=Enchantment Scroll
 
 # Block localizations
 
