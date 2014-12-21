@@ -1,0 +1,17 @@
+# Ignore Everything
+/*
+/*/
+*.db
+
+# Except These
+!/.gitignore
+!/src/
+!/gradle/
+!/gradlew
+!/README.md
+!/LICENSE
+!/build.gradle
+!/.travis.yml
+!/settings.gradle
+!/gradle.properties
+!/CONTRIBUTING.md

@@ -1,0 +1,57 @@
+# Item localizations
+
+#Alchemical Bags
+item.alchemicalBag.white.name=Alchemical Bag (White)
+item.alchemicalBag.orange.name=Alchemical Bag (Orange)
+item.alchemicalBag.magenta.name=Alchemical Bag (Magenta)
+item.alchemicalBag.lightBlue.name=Alchemical Bag (Light Blue)
+item.alchemicalBag.yellow.name=Alchemical Bag (Yellow)
+item.alchemicalBag.lime.name=Alchemical Bag (Lime Green)
+item.alchemicalBag.pink.name=Alchemical Bag (Pink)
+item.alchemicalBag.gray.name=Alchemical Bag (Gray)
+item.alchemicalBag.silver.name=Alchemical Bag (Silver)
+item.alchemicalBag.cyan.name=Alchemical Bag (Cyan)
+item.alchemicalBag.purple.name=Alchemical Bag (Purple)
+item.alchemicalBag.blue.name=Alchemical Bag (Blue)
+item.alchemicalBag.brown.name=Alchemical Bag (Brown)
+item.alchemicalBag.green.name=Alchemical Bag (Green)
+item.alchemicalBag.red.name=Alchemical Bag (Red)
+item.alchemicalBag.black.name=Alchemical Bag (Black)
+
+#Covalence Dusts
+item.dust.low.name=Low Covalence Dust
+item.dust.medium.name=Medium Covalence Dust
+item.dust.high.name=High Covalence Dust
+
+# Matters
+item.matter.dark.name=Dark Matter
+item.matter.red.name=Red Matter
+
+#Klein Stars
+item.kleinStar.ein.name=Klein Star Ein
+item.kleinStar.zwei.name=Klein Star Zwei
+item.kleinStar.drei.name=Klein Star Drei
+item.kleinStar.vier.name=Klein Star Vier
+item.kleinStar.sphere.name=Klein Star Sphere
+item.kleinStar.omega.name=Klein Star Omega
+
+#Alchecmical Fuels
+item.alchemicalFuel.alchemical.name=Alchemical Coal
+item.alchemicalFuel.mobius.name=Mobius Fuel
+item.alchemicalFuel.aeternalis.name=Aeternalis Fuel
+
+#Rings, Amulets etc
+item.blackHoleRing.name=Black Hole Band
+item.archangelSmiteRing.name=Archangels Smite
+item.repairTalismanAmulet.name=Repair Talisman
+
+#Enchantment Scroll
+item.enchantmentScroll.name=Enchantment Scroll
+
+# Block localizations
+
+# GUI localizations
+container.alchemicalBag=Alchemical Bag
+
+# Creative Tab localizations
+itemGroup.MateriaMuto=MateriaMuto

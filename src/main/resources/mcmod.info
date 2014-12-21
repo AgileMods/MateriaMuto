@@ -1,0 +1,22 @@
+[
+{
+  "modid": "MateriaMuto",
+  "name": "MateriaMuto",
+  "description": "A retake on Equivalent Exchange 2",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://agilemods.com",
+  "updateUrl": "",
+  "authors": [
+    "WittyYeti",
+    "dmillerw"
+  ],
+  "credits": "CyanideX & TheMattaBase",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
