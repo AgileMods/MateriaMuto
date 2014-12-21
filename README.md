@@ -1,8 +1,8 @@
-MateriaMuto [![Build Status](https://travis-ci.org/AgileMods/MateriaMuto.svg?branch=master)](https://travis-ci.org/AgileMods/MateriaMuto)
+MateriaMuto [![Build Status](https://travis-ci.org/AgileMods/MateriaMuto.svg?branch=master)](https://travis-ci.org/AgileMods/MateriaMuto) [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 ===============
 
 **Currently not stable and under heavy development!**  
-A retake on Equivalent Exchange 2. It is licensed under the [MIT License].
+A retake on Equivalent Exchange 2.
 
 ###Development
 You can see our current roadmap [here](https://trello.com/b/hlodF9HE/materiamuto)
