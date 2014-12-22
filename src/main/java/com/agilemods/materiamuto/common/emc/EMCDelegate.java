@@ -1,7 +1,7 @@
 package com.agilemods.materiamuto.common.emc;
 
-import com.agilemods.materiamuto.api.IEMCRegistry;
-import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
+import com.agilemods.materiamuto.api.emc.IEMCRegistry;
+import com.agilemods.materiamuto.api.emc.StackReference;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,22 +11,22 @@ public class EMCDelegate implements IEMCRegistry {
 
     @Override
     public void blacklist(Block block) {
-        EMCRegistry.blacklist(new VanillaStackWrapper(block));
+        EMCRegistry.blacklist(new StackReference(block));
     }
 
     @Override
     public void blacklist(Item item) {
-        EMCRegistry.blacklist(new VanillaStackWrapper(item));
+        EMCRegistry.blacklist(new StackReference(item));
     }
 
     @Override
     public void blacklist(ItemStack itemStack) {
-        EMCRegistry.blacklist(new VanillaStackWrapper(itemStack));
+        EMCRegistry.blacklist(new StackReference(itemStack));
     }
 
     @Override
-    public void blacklist(VanillaStackWrapper vanillaStackWrapper) {
-        EMCRegistry.blacklist(vanillaStackWrapper);
+    public void blacklist(StackReference stackReference) {
+        EMCRegistry.blacklist(stackReference);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class EMCDelegate implements IEMCRegistry {
     }
 
     @Override
-    public double getEMC(VanillaStackWrapper vanillaStackWrapper) {
-        return EMCRegistry.getEMC(vanillaStackWrapper);
+    public double getEMC(StackReference stackReference) {
+        return EMCRegistry.getEMC(stackReference);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class EMCDelegate implements IEMCRegistry {
     }
 
     @Override
-    public void setEMC(VanillaStackWrapper vanillaStackWrapper, double value) {
-        EMCRegistry.setEMC(vanillaStackWrapper, value, false);
+    public void setEMC(StackReference stackReference, double value) {
+        EMCRegistry.setEMC(stackReference, value, false);
     }
 }
