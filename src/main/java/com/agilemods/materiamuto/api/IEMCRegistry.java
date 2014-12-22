@@ -1,5 +1,6 @@
-package com.agilemods.materiamuto.api.emc;
+package com.agilemods.materiamuto.api;
 
+import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,7 @@ public interface IEMCRegistry {
 
     public void blacklist(ItemStack itemStack);
 
-    public void blacklist(StackReference stackReference);
+    public void blacklist(VanillaStackWrapper vanillaStackWrapper);
 
     public double getEMC(Object object);
 
@@ -25,7 +26,7 @@ public interface IEMCRegistry {
 
     public double getEMC(ItemStack itemStack);
 
-    public double getEMC(StackReference stackReference);
+    public double getEMC(VanillaStackWrapper vanillaStackWrapper);
 
     public void setEMC(Block block, double value);
 
@@ -35,5 +36,5 @@ public interface IEMCRegistry {
 
     public void setEMC(ItemStack itemStack, double value);
 
-    public void setEMC(StackReference stackReference, double value);
+    public void setEMC(VanillaStackWrapper vanillaStackWrapper, double value);
 }

@@ -1,4 +1,4 @@
-package com.agilemods.materiamuto.api.emc;
+package com.agilemods.materiamuto.api.wrapper;
 
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class StackReference {
+public class VanillaStackWrapper implements IStackWrapper {
 
     private String item;
 
@@ -15,15 +15,15 @@ public class StackReference {
 
     private NBTTagCompound nbtTagCompound;
 
-    public StackReference(Block block) {
+    public VanillaStackWrapper(Block block) {
         this(Item.getItemFromBlock(block));
     }
 
-    public StackReference(Item item) {
+    public VanillaStackWrapper(Item item) {
         this(new ItemStack(item));
     }
 
-    public StackReference(ItemStack itemStack) {
+    public VanillaStackWrapper(ItemStack itemStack) {
         if (itemStack == null || itemStack.getItem() == null) {
             this.item = "";
             this.damage = 0;
@@ -33,12 +33,12 @@ public class StackReference {
         }
     }
 
-    public StackReference(String item, int damage) {
+    public VanillaStackWrapper(String item, int damage) {
         this.item = item;
         this.damage = damage;
     }
 
-    public StackReference setNBT(NBTTagCompound nbtTagCompound) {
+    public VanillaStackWrapper setNBT(NBTTagCompound nbtTagCompound) {
         this.nbtTagCompound = nbtTagCompound;
         return this;
     }
@@ -51,8 +51,14 @@ public class StackReference {
         return itemStack;
     }
 
+    @Override
     public boolean valid() {
         return item != null && !item.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "{item: " + item + " damage: " + damage + (nbtTagCompound != null ? " nbt: " + nbtTagCompound + "}" : "}");
     }
 
     @Override
@@ -68,7 +74,7 @@ public class StackReference {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof StackReference)) {
+        if (!(obj instanceof VanillaStackWrapper)) {
             return false;
         }
 
@@ -76,24 +82,24 @@ public class StackReference {
             return false;
         }
 
-        StackReference stackReference = (StackReference) obj;
+        VanillaStackWrapper vanillaStackWrapper = (VanillaStackWrapper) obj;
 
-        if (!stackReference.valid()) {
+        if (!vanillaStackWrapper.valid()) {
             return false;
         }
 
-        if (item.equals(stackReference.item)) {
-            if (damage == OreDictionary.WILDCARD_VALUE || stackReference.damage == OreDictionary.WILDCARD_VALUE) {
-                if (nbtTagCompound != null && stackReference.nbtTagCompound != null) {
-                    return ItemStack.areItemStackTagsEqual(toItemStack(), stackReference.toItemStack());
+        if (item.equals(vanillaStackWrapper.item)) {
+            if (damage == OreDictionary.WILDCARD_VALUE || vanillaStackWrapper.damage == OreDictionary.WILDCARD_VALUE) {
+                if (nbtTagCompound != null && vanillaStackWrapper.nbtTagCompound != null) {
+                    return ItemStack.areItemStackTagsEqual(toItemStack(), vanillaStackWrapper.toItemStack());
                 } else {
                     return true;
                 }
             } else {
-                if (nbtTagCompound != null && stackReference.nbtTagCompound != null) {
-                    return damage == stackReference.damage && ItemStack.areItemStackTagsEqual(toItemStack(), stackReference.toItemStack());
+                if (nbtTagCompound != null && vanillaStackWrapper.nbtTagCompound != null) {
+                    return damage == vanillaStackWrapper.damage && ItemStack.areItemStackTagsEqual(toItemStack(), vanillaStackWrapper.toItemStack());
                 } else {
-                    return damage == stackReference.damage;
+                    return damage == vanillaStackWrapper.damage;
                 }
             }
         } else {
