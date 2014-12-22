@@ -30,7 +30,7 @@ minecraft {
     runDir = 'run'
 
     replace "@VERSION@", project.version
-    replaceIn "LibMisc.java"
+    replaceIn "lib/LibMisc.java"
 }
 
 configurations {
@@ -41,11 +41,15 @@ repositories {
     mavenCentral()
     maven { url = "http://agilemods.com/maven" }
     maven { url = "http://chickenbones.net/maven/" }
-    maven { url = "http://dl.tsr.me/artifactory/libs-release-local" }
+    maven { url = "http://maven.ic2.player.to/" }
 }
 
 dependencies {
-	
+    compile "net.industrial-craft:industrialcraft-2:2.2.658-experimental:api"
+    compile "appeng:appliedenergistics2:rv1-stable-1:dev"
+    complie "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:api"
+    compile "com.azanor.thaumcraft:Thaumcraft:1.7.10-4.2.2.0:api"
+    compile "org.invtweaks.invtweaks:InvTweaks:1.58-147:api"
 }
 
 sourceSets {
