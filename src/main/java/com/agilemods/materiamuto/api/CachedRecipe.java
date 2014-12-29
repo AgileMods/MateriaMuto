@@ -16,10 +16,6 @@ public class CachedRecipe {
 
     public Map<IStackWrapper, Integer> components = Maps.newHashMap();
 
-    public CachedRecipe() {
-        components = Maps.newHashMap();
-    }
-
     public CachedRecipe(List list) {
         this(list.toArray(new Object[list.size()]));
     }
@@ -29,7 +25,7 @@ public class CachedRecipe {
 
         for (Object object : array) {
             IStackWrapper stackWrapper = null;
-            int count = 0;
+            int count;
 
             if (object instanceof Block) {
                 stackWrapper = new VanillaStackWrapper((Block) object);
@@ -68,6 +64,15 @@ public class CachedRecipe {
         }
 
         components.putAll(map);
+    }
+
+    public double getEMC() {
+        double emc = 0;
+        for (Map.Entry<IStackWrapper, Integer> entry : components.entrySet()) {
+            double subEmc = entry.getKey() == null ? 0 : entry.getKey().getEMC();
+            emc += subEmc * entry.getValue();
+        }
+        return emc;
     }
 
     @Override

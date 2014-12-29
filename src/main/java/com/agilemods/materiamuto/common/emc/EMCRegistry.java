@@ -1,11 +1,14 @@
 package com.agilemods.materiamuto.common.emc;
 
+import com.agilemods.materiamuto.api.IRecipeScanner;
+import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
+import com.agilemods.materiamuto.common.emc.recipe.CraftingRecipeScanner;
+import com.agilemods.materiamuto.common.emc.recipe.SmeltingRecipeHandler;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.init.Blocks;
@@ -16,7 +19,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +29,10 @@ public class EMCRegistry {
     private static Map<String, Double> genericEmcMapping = Maps.newHashMap();
 
     private static Set<VanillaStackWrapper> blacklist = Sets.newHashSet();
+
+    private static List<IRecipeScanner> recipeScanners = Lists.newArrayList();
+
+    private static Set<IStackWrapper> tempBlacklist = Sets.newHashSet();
 
     private static final EMCDelegate emcDelegate = new EMCDelegate();
 
@@ -37,6 +44,30 @@ public class EMCRegistry {
         emcMapping.clear();
         genericEmcMapping.clear();
         blacklist.clear();
+        recipeScanners.clear();
+        tempBlacklist.clear();
+    }
+
+    private static void determineEMC(VanillaStackWrapper stackWrapper) {
+        if (getEMC(stackWrapper, false) <= 0) {
+            EMCRegistry.tempBlacklist.add(stackWrapper);
+
+            int count = 0;
+            double emc = 0;
+
+            for (IRecipeScanner recipeScanner : recipeScanners) {
+                double subEmc = recipeScanner.getEMC(stackWrapper);
+                if (subEmc > 0) {
+                    count++;
+                    emc += recipeScanner.getEMC(stackWrapper);
+                }
+            }
+
+            emc = emc / (double)count;
+            EMCRegistry.setEMC(stackWrapper, emc, false);
+
+            EMCRegistry.tempBlacklist.remove(stackWrapper);
+        }
     }
 
     public static void setEMC(Fluid fluid, double value) {
@@ -76,12 +107,12 @@ public class EMCRegistry {
         setEMC(new VanillaStackWrapper(itemStack), value, false);
     }
 
-    public static void setEMC(VanillaStackWrapper VanillaStackWrapper, double value, boolean force) {
-        if (!blacklist.contains(VanillaStackWrapper)) {
+    public static void setEMC(VanillaStackWrapper stackWrapper, double value, boolean force) {
+        if (!blacklist.contains(stackWrapper)) {
             if (force) {
-                emcMapping.remove(VanillaStackWrapper);
+                emcMapping.remove(stackWrapper);
             }
-            emcMapping.put(VanillaStackWrapper, value);
+            emcMapping.put(stackWrapper, value);
         }
     }
 
@@ -96,27 +127,37 @@ public class EMCRegistry {
             return getEMC((ItemStack) object);
         }
         if (object instanceof VanillaStackWrapper) {
-            return getEMC((VanillaStackWrapper) object);
+            return getEMC((VanillaStackWrapper) object, true);
         }
         return 0;
     }
 
     public static double getEMC(Block block) {
-        return getEMC(new VanillaStackWrapper(block));
+        return getEMC(new VanillaStackWrapper(block), true);
     }
 
     public static double getEMC(Item item) {
-        return getEMC(new VanillaStackWrapper(item));
+        return getEMC(new VanillaStackWrapper(item), true);
     }
 
     public static double getEMC(ItemStack itemStack) {
-        return getEMC(new VanillaStackWrapper(itemStack));
+        return getEMC(new VanillaStackWrapper(itemStack), true);
     }
 
-    public static double getEMC(VanillaStackWrapper VanillaStackWrapper) {
-        if (!blacklist.contains(VanillaStackWrapper)) {
-            Double value = emcMapping.get(VanillaStackWrapper);
-            return value == null ? 0 : value;
+    public static double getEMC(VanillaStackWrapper stackWrapper, boolean scan) {
+        if (!tempBlacklist.contains(stackWrapper) && !blacklist.contains(stackWrapper)) {
+
+            tempBlacklist.add(stackWrapper);
+            Double value = emcMapping.get(stackWrapper);
+            if (scan) {
+                if (value == null || value <= 0) {
+                    determineEMC(stackWrapper);
+                    value = getEMC(stackWrapper, false);
+                }
+            }
+            tempBlacklist.remove(stackWrapper);
+
+            return value;
         } else {
             return 0;
         }
@@ -125,6 +166,14 @@ public class EMCRegistry {
     public static void initialize() {
         initializeLazyValues();
         initializeLazyFluidValues();
+
+        recipeScanners.add(new CraftingRecipeScanner());
+        recipeScanners.add(new SmeltingRecipeHandler());
+
+        for (IRecipeScanner recipeScanner : recipeScanners) {
+            System.out.println("Initializing " + recipeScanner.getClass().getSimpleName());
+            recipeScanner.scan();
+        }
 
         addFinalValues();
     }

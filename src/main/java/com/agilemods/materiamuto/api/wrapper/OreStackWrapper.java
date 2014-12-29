@@ -1,5 +1,6 @@
 package com.agilemods.materiamuto.api.wrapper;
 
+import com.agilemods.materiamuto.common.emc.EMCRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,21 @@ public class OreStackWrapper implements IStackWrapper {
     @Override
     public boolean valid() {
         return oreTag != null && !oreTag.isEmpty();
+    }
+
+    @Override
+    public double getEMC() {
+        double emc = 0;
+        int count = 0;
+
+        for (ItemStack itemStack : OreDictionary.getOres(oreTag)) {
+            emc += EMCRegistry.getEMC(itemStack);
+            count++;
+        }
+
+        emc = emc / (double)count;
+
+        return emc;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.agilemods.materiamuto.api.wrapper;
 
+import com.agilemods.materiamuto.common.emc.EMCRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ public class VanillaStackWrapper implements IStackWrapper {
     private String item;
 
     private int damage;
+    public  int stackSize;
 
     private NBTTagCompound nbtTagCompound;
 
@@ -27,9 +29,11 @@ public class VanillaStackWrapper implements IStackWrapper {
         if (itemStack == null || itemStack.getItem() == null) {
             this.item = "";
             this.damage = 0;
+            this.stackSize = 1;
         } else {
             this.item = GameData.getItemRegistry().getNameForObject(itemStack.getItem());
             this.damage = itemStack.getItemDamage();
+            this.stackSize = itemStack.stackSize;
         }
     }
 
@@ -54,6 +58,11 @@ public class VanillaStackWrapper implements IStackWrapper {
     @Override
     public boolean valid() {
         return item != null && !item.isEmpty();
+    }
+
+    @Override
+    public double getEMC() {
+        return EMCRegistry.getEMC(toItemStack());
     }
 
     @Override

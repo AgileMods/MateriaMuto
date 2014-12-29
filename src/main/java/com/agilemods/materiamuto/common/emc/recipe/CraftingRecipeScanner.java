@@ -1,6 +1,7 @@
 package com.agilemods.materiamuto.common.emc.recipe;
 
 import com.agilemods.materiamuto.api.CachedRecipe;
+import com.agilemods.materiamuto.api.IEMCRegistry;
 import com.agilemods.materiamuto.api.IRecipeScanner;
 import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
@@ -18,16 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class VanillaCraftingRecipeScanner implements IRecipeScanner {
+public class CraftingRecipeScanner implements IRecipeScanner {
 
-    private Map<VanillaStackWrapper, Set<CachedRecipe>> cachedRecipes;
+    private Map<VanillaStackWrapper, Set<CachedRecipe>> outputMaps = Maps.newHashMap();
 
-    public VanillaCraftingRecipeScanner() {
-        cachedRecipes = Maps.newHashMap();
+    public CraftingRecipeScanner() {
+        scan();
     }
 
     private void addRecipe(VanillaStackWrapper stackWrapper, CachedRecipe recipe) {
-        Set<CachedRecipe> set = cachedRecipes.get(stackWrapper);
+        Set<CachedRecipe> set = outputMaps.get(stackWrapper);
         if (set == null) {
             set = Sets.newHashSet();
         }
@@ -36,17 +37,16 @@ public class VanillaCraftingRecipeScanner implements IRecipeScanner {
         Iterator<Map.Entry<IStackWrapper, Integer>> iterator = recipe.components.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<IStackWrapper, Integer> entry = iterator.next();
-            if (entry == null ||!entry.getKey().valid()) {
+            if (entry == null || entry.getKey() == null || entry.getValue() == null || !entry.getKey().valid()) {
                 iterator.remove();
             }
         }
 
         set.add(recipe);
-        cachedRecipes.put(stackWrapper, set);
+        outputMaps.put(stackWrapper, set);
     }
 
-    @Override
-    public void scan() {
+    private void scan() {
         for (IRecipe recipe : (List<IRecipe>)CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
             if (recipe instanceof ShapedRecipes) {
@@ -62,7 +62,20 @@ public class VanillaCraftingRecipeScanner implements IRecipeScanner {
     }
 
     @Override
-    public Set<CachedRecipe> getRecipesForItem(VanillaStackWrapper vanillaStackWrapper) {
-        return cachedRecipes.get(vanillaStackWrapper);
+    public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
+        int count = 0;
+        double emc = 0;
+
+        Set<CachedRecipe> recipeSet = outputMaps.get(vanillaStackWrapper);
+        if (recipeSet != null) {
+            for (CachedRecipe cachedRecipe : recipeSet) {
+                count++;
+                emc += cachedRecipe.getEMC() / vanillaStackWrapper.stackSize;
+            }
+        } else {
+            return 0;
+        }
+
+        return emc / (double)count;
     }
 }
