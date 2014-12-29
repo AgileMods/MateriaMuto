@@ -56,10 +56,10 @@ public class EMCRegistry {
             double emc = 0;
 
             for (IRecipeScanner recipeScanner : recipeScanners) {
-                double subEmc = recipeScanner.getEMC(stackWrapper);
+                double subEmc = recipeScanner.getEMC(emcDelegate, stackWrapper);
                 if (subEmc > 0) {
                     count++;
-                    emc += recipeScanner.getEMC(stackWrapper);
+                    emc += recipeScanner.getEMC(emcDelegate, stackWrapper);
                 }
             }
 
@@ -169,11 +169,6 @@ public class EMCRegistry {
 
         recipeScanners.add(new CraftingRecipeScanner());
         recipeScanners.add(new SmeltingRecipeHandler());
-
-        for (IRecipeScanner recipeScanner : recipeScanners) {
-            System.out.println("Initializing " + recipeScanner.getClass().getSimpleName());
-            recipeScanner.scan();
-        }
 
         addFinalValues();
     }
