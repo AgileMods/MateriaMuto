@@ -3,12 +3,16 @@ package com.agilemods.materiamuto.common.emc;
 import com.agilemods.materiamuto.api.IRecipeScanner;
 import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
-import com.agilemods.materiamuto.common.emc.recipe.CraftingRecipeScanner;
-import com.agilemods.materiamuto.common.emc.recipe.SmeltingRecipeHandler;
+import com.agilemods.materiamuto.common.emc.recipe.VanillaCraftingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.VanillaSmeltingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.IC2CraftingScanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.init.Blocks;
@@ -16,9 +20,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -150,27 +157,42 @@ public class EMCRegistry {
             tempBlacklist.add(stackWrapper);
             Double value = emcMapping.get(stackWrapper);
             if (scan) {
-                if (value == null || value <= 0) {
+                if (value == null || Double.isNaN(value) || value <= 0) {
                     determineEMC(stackWrapper);
                     value = getEMC(stackWrapper, false);
                 }
             }
             tempBlacklist.remove(stackWrapper);
 
-            return value;
+            if (value == null || Double.isNaN(value)) {
+                return 0;
+            } else {
+                return value;
+            }
         } else {
             return 0;
         }
     }
 
     public static void initialize() {
+        initializeBlacklist();
+
         initializeLazyValues();
         initializeLazyFluidValues();
 
-        recipeScanners.add(new CraftingRecipeScanner());
-        recipeScanners.add(new SmeltingRecipeHandler());
+        recipeScanners.add(new VanillaCraftingScanner());
+        recipeScanners.add(new VanillaSmeltingScanner());
+
+        recipeScanners.add(new IC2CraftingScanner());
 
         addFinalValues();
+    }
+
+    private static void initializeBlacklist() {
+        if (Loader.isModLoaded("IC2")) {
+            blacklist.add(new VanillaStackWrapper(GameRegistry.findItem("IC2", "itemToolForgeHammer")));
+            blacklist.add(new VanillaStackWrapper(GameRegistry.findItem("IC2", "itemToolCutter")));
+        }
     }
 
     private static void initializeLazyValues() {
@@ -301,6 +323,26 @@ public class EMCRegistry {
     }
 
     private static void addFinalValues() {
+        // Fluid handling
+        for (Item item : GameData.getItemRegistry().typeSafeIterable()) {
+            LinkedList<ItemStack> subItems = Lists.newLinkedList();
+
+            try {
+                item.getSubItems(item, item.getCreativeTab(), subItems);
+            } catch (Exception ignore) {}
+
+            for (ItemStack itemStack : subItems) {
+                if (FluidContainerRegistry.isContainer(itemStack)) {
+                    FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemStack);
+                    ItemStack empty = FluidContainerRegistry.drainFluidContainer(itemStack);
+
+                    if (fluidStack != null && empty != null) {
+                        setEMC(itemStack, getEMC(empty) + getEMC(fluidStack.getFluid()));
+                    }
+                }
+            }
+        }
+
         // Stone brick handling
         double stoneBrickEmc = getEMC(Blocks.stonebrick);
         for (int i = 1; i < BlockStoneBrick.field_150141_b.length; i++) {

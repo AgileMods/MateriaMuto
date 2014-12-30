@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CraftingRecipeScanner implements IRecipeScanner {
+public class VanillaCraftingScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<CachedRecipe>> outputMaps = Maps.newHashMap();
 
-    public CraftingRecipeScanner() {
+    public VanillaCraftingScanner() {
         scan();
     }
 

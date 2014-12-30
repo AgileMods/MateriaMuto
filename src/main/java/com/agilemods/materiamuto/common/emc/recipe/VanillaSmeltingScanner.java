@@ -10,12 +10,12 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import java.util.Map;
 import java.util.Set;
 
-public class SmeltingRecipeHandler implements IRecipeScanner {
+public class VanillaSmeltingScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, VanillaStackWrapper> inToOutMap = Maps.newHashMap();
     private Map<VanillaStackWrapper, VanillaStackWrapper> outToInMap = Maps.newHashMap();
 
-    public SmeltingRecipeHandler() {
+    public VanillaSmeltingScanner() {
         scan();
     }
 

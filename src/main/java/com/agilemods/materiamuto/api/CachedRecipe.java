@@ -16,6 +16,8 @@ public class CachedRecipe {
 
     public Map<IStackWrapper, Integer> components = Maps.newHashMap();
 
+    public CachedRecipe() {}
+
     public CachedRecipe(List list) {
         this(list.toArray(new Object[list.size()]));
     }
@@ -26,6 +28,9 @@ public class CachedRecipe {
         for (Object object : array) {
             IStackWrapper stackWrapper = null;
             int count;
+
+            if (object == null)
+                continue;
 
             if (object instanceof Block) {
                 stackWrapper = new VanillaStackWrapper((Block) object);
@@ -38,6 +43,9 @@ public class CachedRecipe {
                     stackWrapper = new OreStackWrapper((ItemStack) ((ArrayList)object).get(0));
                 }
             }
+
+            if (stackWrapper == null)
+                continue;
 
             if (!map.containsKey(stackWrapper)) {
                 count = 1;
@@ -66,12 +74,23 @@ public class CachedRecipe {
         components.putAll(map);
     }
 
+    public CachedRecipe addStackWrapper(IStackWrapper stackWrapper) {
+        if (components.containsKey(stackWrapper)) {
+            components.put(stackWrapper, components.get(stackWrapper) + 1);
+        } else {
+            components.put(stackWrapper, 1);
+        }
+        return this;
+    }
+
     public double getEMC() {
         double emc = 0;
-        for (Map.Entry<IStackWrapper, Integer> entry : components.entrySet()) {
-            double subEmc = entry.getKey() == null ? 0 : entry.getKey().getEMC();
-            emc += subEmc * entry.getValue();
+
+        for (IStackWrapper stackWrapper : components.keySet()) {
+            double subEmc = stackWrapper.getEMC() * components.get(stackWrapper);
+            emc += subEmc;
         }
+
         return emc;
     }
 
