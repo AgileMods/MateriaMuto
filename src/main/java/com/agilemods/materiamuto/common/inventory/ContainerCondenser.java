@@ -1,5 +1,6 @@
 package com.agilemods.materiamuto.common.inventory;
 
+import com.agilemods.materiamuto.common.inventory.slot.SlotHasEMC;
 import com.agilemods.materiamuto.common.network.packet.PacketHandler;
 import com.agilemods.materiamuto.common.network.packet.message.MessageGuiData;
 import com.agilemods.materiamuto.common.tile.TileCondenser;
@@ -32,7 +33,7 @@ public class ContainerCondenser extends Container implements MessageGuiData.IGui
             }
         }
 
-        this.addSlotToContainer(new Slot(tileCondenser, TileCondenser.TARGET_SLOT, 12, 6));
+        this.addSlotToContainer(new SlotHasEMC(tileCondenser, TileCondenser.TARGET_SLOT, 12, 6));
 
         for (j = 0; j < 3; ++j) {
             for (k = 0; k < 9; ++k) {
