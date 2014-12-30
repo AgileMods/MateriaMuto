@@ -4,22 +4,23 @@ import com.agilemods.materiamuto.api.CachedRecipe;
 import com.agilemods.materiamuto.api.IEMCRegistry;
 import com.agilemods.materiamuto.api.IRecipeScanner;
 import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
-import com.agilemods.materiamuto.api.wrapper.OreStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class IC2CraftingScanner implements IRecipeScanner {
+public class ThaumcraftCraftingScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<CachedRecipe>> outputMaps = Maps.newHashMap();
 
-    public IC2CraftingScanner() {
+    public ThaumcraftCraftingScanner() {
         scan();
     }
 
@@ -45,45 +46,18 @@ public class IC2CraftingScanner implements IRecipeScanner {
     private void scan() {
         for (IRecipe recipe : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
-            if (recipe.getClass().getSimpleName().equals("AdvRecipe") || recipe.getClass().getSimpleName().equals("AdvShapelessRecipe")) {
-                addRecipe(stackWrapper, getCachedRecipe(recipe));
+            if (recipe.getClass().getSimpleName().equals("ShapedArcaneRecipe") || recipe.getClass().getSimpleName().equals("ShapelessArcaneRecipe")) {
+                addRecipe(stackWrapper, new CachedRecipe(getInput(recipe)));
             }
         }
     }
 
-    private CachedRecipe getCachedRecipe(IRecipe recipe) {
-        CachedRecipe cachedRecipe = new CachedRecipe();
-        Object[] input = (Object[]) getInput(recipe);
-
-        for (Object object : input) {
-            if (object instanceof List<?>) {
-                List<?> list = (List<?>) object;
-
-                for (Object entry : list) {
-                    if (entry.getClass().getSimpleName().equals("RecipeInputItemStack")) {
-                        cachedRecipe.addStackWrapper(new VanillaStackWrapper((ItemStack) getInput(entry)));
-                    } else if (entry.getClass().getSimpleName().equals("RecipeInputOreDict")) {
-                        cachedRecipe.addStackWrapper(new OreStackWrapper((String) getInput(entry)));
-                    }
-                }
-            } else {
-                if (object.getClass().getSimpleName().equals("RecipeInputItemStack")) {
-                    cachedRecipe.addStackWrapper(new VanillaStackWrapper((ItemStack) getInput(object)));
-                } else if (object.getClass().getSimpleName().equals("RecipeInputOreDict")) {
-                    cachedRecipe.addStackWrapper(new OreStackWrapper((String) getInput(object)));
-                }
-            }
-        }
-
-        return cachedRecipe;
-    }
-
-    private Object getInput(Object object) {
-        Class<?> clazz = object.getClass();
+    private Object[] getInput(IRecipe recipe) {
+        Class<?> clazz = recipe.getClass();
         try {
             Field field = clazz.getDeclaredField("input");
             field.setAccessible(true);
-            return field.get(object);
+            return (Object[]) field.get(recipe);
         } catch (Exception ex) {
             return new Object[0];
         }

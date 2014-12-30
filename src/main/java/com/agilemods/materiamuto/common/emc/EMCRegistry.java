@@ -6,6 +6,7 @@ import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaCraftingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaSmeltingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.compat.IC2CraftingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.ThaumcraftCraftingScanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -184,6 +185,7 @@ public class EMCRegistry {
         recipeScanners.add(new VanillaSmeltingScanner());
 
         recipeScanners.add(new IC2CraftingScanner());
+        recipeScanners.add(new ThaumcraftCraftingScanner());
 
         addFinalValues();
     }
