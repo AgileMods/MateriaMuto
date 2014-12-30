@@ -185,7 +185,10 @@ public class EMCRegistry {
         recipeScanners.add(new VanillaSmeltingScanner());
 
         recipeScanners.add(new IC2CraftingScanner());
-        recipeScanners.add(new ThaumcraftCraftingScanner());
+
+        if (Loader.isModLoaded("Thaumcraft")) {
+            recipeScanners.add(new ThaumcraftCraftingScanner());
+        }
 
         addFinalValues();
     }

@@ -9,6 +9,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import thaumcraft.api.crafting.ShapedArcaneRecipe;
+import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -46,20 +48,11 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
     private void scan() {
         for (IRecipe recipe : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
-            if (recipe.getClass().getSimpleName().equals("ShapedArcaneRecipe") || recipe.getClass().getSimpleName().equals("ShapelessArcaneRecipe")) {
-                addRecipe(stackWrapper, new CachedRecipe(getInput(recipe)));
+            if (recipe instanceof ShapedArcaneRecipe) {
+                addRecipe(stackWrapper, new CachedRecipe(((ShapedArcaneRecipe) recipe).getInput()));
+            } else if (recipe instanceof ShapelessArcaneRecipe) {
+                addRecipe(stackWrapper, new CachedRecipe(((ShapelessArcaneRecipe) recipe).getInput()));
             }
-        }
-    }
-
-    private Object[] getInput(IRecipe recipe) {
-        Class<?> clazz = recipe.getClass();
-        try {
-            Field field = clazz.getDeclaredField("input");
-            field.setAccessible(true);
-            return (Object[]) field.get(recipe);
-        } catch (Exception ex) {
-            return new Object[0];
         }
     }
 
