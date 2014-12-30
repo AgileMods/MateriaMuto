@@ -7,6 +7,7 @@ import com.agilemods.materiamuto.common.emc.recipe.VanillaCraftingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaSmeltingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.compat.IC2CraftingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.compat.ThaumcraftCraftingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.ThaumcraftCrucibleScanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -188,6 +189,7 @@ public class EMCRegistry {
 
         if (Loader.isModLoaded("Thaumcraft")) {
             recipeScanners.add(new ThaumcraftCraftingScanner());
+            recipeScanners.add(new ThaumcraftCrucibleScanner());
         }
 
         addFinalValues();
@@ -363,5 +365,9 @@ public class EMCRegistry {
         double string = getEMC(Items.string);
         double paper = getEMC(Items.paper);
         setEMC(Items.name_tag, string + paper);
+
+        if (Loader.isModLoaded("Thaumcraft")) {
+            setEMC(GameRegistry.findItem("Thaumcraft", "ItemThaumonomicon"), getEMC(Blocks.bookshelf));
+        }
     }
 }

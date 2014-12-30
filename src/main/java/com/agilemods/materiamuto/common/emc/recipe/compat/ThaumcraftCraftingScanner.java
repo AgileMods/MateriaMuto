@@ -12,7 +12,6 @@ import net.minecraft.item.crafting.IRecipe;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +48,9 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
         for (IRecipe recipe : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
             if (recipe instanceof ShapedArcaneRecipe) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapedArcaneRecipe) recipe).getInput()));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapedArcaneRecipe) recipe).getInput()).setResult(new VanillaStackWrapper(recipe.getRecipeOutput())));
             } else if (recipe instanceof ShapelessArcaneRecipe) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapelessArcaneRecipe) recipe).getInput()));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapelessArcaneRecipe) recipe).getInput()).setResult(new VanillaStackWrapper(recipe.getRecipeOutput())));
             }
         }
     }
@@ -65,7 +64,7 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
                 count++;
-                emc += cachedRecipe.getEMC() / vanillaStackWrapper.stackSize;
+                emc += cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
             }
         } else {
             return 0;

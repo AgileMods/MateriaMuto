@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class CachedRecipe {
 
+    public VanillaStackWrapper result = null;
     public Map<IStackWrapper, Integer> components = Maps.newHashMap();
 
     public CachedRecipe() {}
@@ -80,6 +81,11 @@ public class CachedRecipe {
         } else {
             components.put(stackWrapper, 1);
         }
+        return this;
+    }
+
+    public CachedRecipe setResult(VanillaStackWrapper stackWrapper) {
+        this.result = stackWrapper;
         return this;
     }
 

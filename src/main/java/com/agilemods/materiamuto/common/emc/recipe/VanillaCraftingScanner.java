@@ -50,13 +50,13 @@ public class VanillaCraftingScanner implements IRecipeScanner {
         for (IRecipe recipe : (List<IRecipe>)CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
             if (recipe instanceof ShapedRecipes) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapedRecipes) recipe).recipeItems));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapedRecipes) recipe).recipeItems).setResult(stackWrapper));
             } else if (recipe instanceof ShapelessRecipes) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapelessRecipes) recipe).recipeItems));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapelessRecipes) recipe).recipeItems).setResult(stackWrapper));
             } else if (recipe instanceof ShapedOreRecipe) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapedOreRecipe) recipe).getInput()));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapedOreRecipe) recipe).getInput()).setResult(stackWrapper));
             } else if (recipe instanceof ShapelessOreRecipe) {
-                addRecipe(stackWrapper, new CachedRecipe(((ShapelessOreRecipe) recipe).getInput()));
+                addRecipe(stackWrapper, new CachedRecipe(((ShapelessOreRecipe) recipe).getInput()).setResult(stackWrapper));
             }
         }
     }
@@ -70,7 +70,7 @@ public class VanillaCraftingScanner implements IRecipeScanner {
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
                 count++;
-                emc += cachedRecipe.getEMC() / vanillaStackWrapper.stackSize;
+                emc += cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
             }
         } else {
             return 0;

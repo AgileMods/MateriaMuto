@@ -52,7 +52,7 @@ public class IC2CraftingScanner implements IRecipeScanner {
     }
 
     private CachedRecipe getCachedRecipe(IRecipe recipe) {
-        CachedRecipe cachedRecipe = new CachedRecipe();
+        CachedRecipe cachedRecipe = new CachedRecipe().setResult(new VanillaStackWrapper(recipe.getRecipeOutput()));
         Object[] input = (Object[]) getInput(recipe);
 
         for (Object object : input) {
@@ -98,7 +98,7 @@ public class IC2CraftingScanner implements IRecipeScanner {
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
                 count++;
-                emc += cachedRecipe.getEMC() / vanillaStackWrapper.stackSize;
+                emc += cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
             }
         } else {
             return 0;
