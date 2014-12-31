@@ -7,21 +7,27 @@ import com.google.common.collect.Maps;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class VanillaSmeltingScanner implements IRecipeScanner {
 
-    private Map<VanillaStackWrapper, VanillaStackWrapper> inToOutMap = Maps.newHashMap();
-    private Map<VanillaStackWrapper, VanillaStackWrapper> outToInMap = Maps.newHashMap();
+    private Map<VanillaStackWrapper, Set<VanillaStackWrapper>> smeltingMap = Maps.newHashMap();
 
     public VanillaSmeltingScanner() {
         scan();
     }
 
     private void addRecipe(VanillaStackWrapper input, VanillaStackWrapper output) {
-        inToOutMap.put(input, output);
-        outToInMap.put(output, input);
+        Set<VanillaStackWrapper> set = smeltingMap.get(output);
+        if (set == null) {
+            set = new HashSet<VanillaStackWrapper>();
+        }
+
+        set.add(input);
+
+        smeltingMap.put(output, set);
     }
 
     private void scan() {
@@ -31,15 +37,20 @@ public class VanillaSmeltingScanner implements IRecipeScanner {
     }
 
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
-        VanillaStackWrapper result = inToOutMap.get(vanillaStackWrapper);
-        VanillaStackWrapper input = outToInMap.get(vanillaStackWrapper);
+        double emc = 0;
 
-        if (result != null) {
-            return result.getEMC() / result.stackSize;
-        } else if (input != null) {
-            return input.getEMC() * input.getEMC();
+        Set<VanillaStackWrapper> set = smeltingMap.get(vanillaStackWrapper);
+        if (set != null) {
+            for (VanillaStackWrapper input : set) {
+                double subEmc = input.getEMC();
+                if (emc == 0 || subEmc < emc) {
+                    emc = subEmc;
+                }
+            }
         } else {
             return 0;
         }
+
+        return emc;
     }
 }

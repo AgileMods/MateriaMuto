@@ -54,12 +54,17 @@ public class ThaumcraftCrucibleScanner implements IRecipeScanner {
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
         double emc = 0;
 
-        if (!components.containsKey(vanillaStackWrapper)) {
-            return 0;
-        }
+        Set<VanillaStackWrapper> set = components.get(vanillaStackWrapper);
 
-        for (VanillaStackWrapper stackWrapper : components.get(vanillaStackWrapper)) {
-            emc += stackWrapper.getEMC();
+        if (set != null) {
+            for (VanillaStackWrapper stackWrapper : components.get(vanillaStackWrapper)) {
+                double subEmc = stackWrapper.getEMC();
+                if (emc == 0 || subEmc < emc) {
+                    emc = subEmc;
+                }
+            }
+        } else {
+            return 0;
         }
 
         return emc;

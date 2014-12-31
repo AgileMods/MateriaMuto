@@ -57,19 +57,20 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
 
     @Override
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
-        int count = 0;
         double emc = 0;
 
         Set<CachedRecipe> recipeSet = outputMaps.get(vanillaStackWrapper);
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
-                count++;
-                emc += cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
+                double subEmc = cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
+                if (emc == 0 || subEmc < emc) {
+                    emc = subEmc;
+                }
             }
         } else {
             return 0;
         }
 
-        return emc / (double)count;
+        return emc;
     }
 }

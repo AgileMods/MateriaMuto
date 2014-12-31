@@ -8,6 +8,10 @@ import com.agilemods.materiamuto.api.wrapper.OreStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import ic2.api.recipe.RecipeInputItemStack;
+import ic2.api.recipe.RecipeInputOreDict;
+import ic2.core.AdvRecipe;
+import ic2.core.AdvShapelessRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -45,7 +49,9 @@ public class IC2CraftingScanner implements IRecipeScanner {
     private void scan() {
         for (IRecipe recipe : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
-            if (recipe.getClass().getSimpleName().equals("AdvRecipe") || recipe.getClass().getSimpleName().equals("AdvShapelessRecipe")) {
+            if (recipe instanceof AdvRecipe) {
+                addRecipe(stackWrapper, getCachedRecipe(recipe));
+            } else if (recipe instanceof AdvShapelessRecipe) {
                 addRecipe(stackWrapper, getCachedRecipe(recipe));
             }
         }
@@ -53,57 +59,59 @@ public class IC2CraftingScanner implements IRecipeScanner {
 
     private CachedRecipe getCachedRecipe(IRecipe recipe) {
         CachedRecipe cachedRecipe = new CachedRecipe().setResult(new VanillaStackWrapper(recipe.getRecipeOutput()));
-        Object[] input = (Object[]) getInput(recipe);
+        Object[] input = getInput(recipe);
 
         for (Object object : input) {
             if (object instanceof List<?>) {
                 List<?> list = (List<?>) object;
 
                 for (Object entry : list) {
-                    if (entry.getClass().getSimpleName().equals("RecipeInputItemStack")) {
-                        cachedRecipe.addStackWrapper(new VanillaStackWrapper((ItemStack) getInput(entry)));
-                    } else if (entry.getClass().getSimpleName().equals("RecipeInputOreDict")) {
-                        cachedRecipe.addStackWrapper(new OreStackWrapper((String) getInput(entry)));
-                    }
+                    cachedRecipe.addStackWrapper(ic2InputToWrapper(entry));
                 }
             } else {
-                if (object.getClass().getSimpleName().equals("RecipeInputItemStack")) {
-                    cachedRecipe.addStackWrapper(new VanillaStackWrapper((ItemStack) getInput(object)));
-                } else if (object.getClass().getSimpleName().equals("RecipeInputOreDict")) {
-                    cachedRecipe.addStackWrapper(new OreStackWrapper((String) getInput(object)));
-                }
+                cachedRecipe.addStackWrapper(ic2InputToWrapper(object));
             }
         }
 
         return cachedRecipe;
     }
 
-    private Object getInput(Object object) {
-        Class<?> clazz = object.getClass();
-        try {
-            Field field = clazz.getDeclaredField("input");
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (Exception ex) {
+    private Object[] getInput(IRecipe recipe) {
+        if (recipe instanceof AdvRecipe) {
+            return ((AdvRecipe) recipe).input;
+        } else if (recipe instanceof AdvShapelessRecipe) {
+            return ((AdvShapelessRecipe) recipe).input;
+        } else {
             return new Object[0];
+        }
+    }
+
+    private IStackWrapper ic2InputToWrapper(Object object) {
+        if (object instanceof RecipeInputItemStack) {
+            return new VanillaStackWrapper(((RecipeInputItemStack) object).input);
+        } else if (object instanceof RecipeInputOreDict) {
+            return new OreStackWrapper(((RecipeInputOreDict) object).input);
+        } else {
+            return null;
         }
     }
 
     @Override
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
-        int count = 0;
         double emc = 0;
 
         Set<CachedRecipe> recipeSet = outputMaps.get(vanillaStackWrapper);
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
-                count++;
-                emc += cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
+                double subEmc = cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
+                if (emc == 0 || subEmc < emc) {
+                    emc = subEmc;
+                }
             }
         } else {
             return 0;
         }
 
-        return emc / (double)count;
+        return emc;
     }
 }

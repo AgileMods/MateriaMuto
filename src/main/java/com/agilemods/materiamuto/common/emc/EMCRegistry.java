@@ -185,7 +185,9 @@ public class EMCRegistry {
         recipeScanners.add(new VanillaCraftingScanner());
         recipeScanners.add(new VanillaSmeltingScanner());
 
-        recipeScanners.add(new IC2CraftingScanner());
+        if (Loader.isModLoaded("IC2")) {
+            recipeScanners.add(new IC2CraftingScanner());
+        }
 
         if (Loader.isModLoaded("Thaumcraft")) {
             recipeScanners.add(new ThaumcraftCraftingScanner());
@@ -309,6 +311,11 @@ public class EMCRegistry {
             setEMC(new ItemStack(Items.dye, 1, i), emc);
         }
 
+        addOreDictionaryValue("ingotCopper", 85);
+        addOreDictionaryValue("ingotTin", 256);
+        addOreDictionaryValue("ingotLead", 256);
+        addOreDictionaryValue("ingotSilver", 512);
+
         // Also add ore dictionary tags
         ImmutableSet<VanillaStackWrapper> immutableSet = ImmutableSet.copyOf(emcMapping.keySet());
         for (VanillaStackWrapper VanillaStackWrapper : immutableSet) {
@@ -321,6 +328,12 @@ public class EMCRegistry {
                     setEMC(oreStack, emc);
                 }
             }
+        }
+    }
+
+    private static void addOreDictionaryValue(String oreTag, double value) {
+        for (ItemStack itemStack : OreDictionary.getOres(oreTag)) {
+            setEMC(itemStack, value);
         }
     }
 
