@@ -24,7 +24,7 @@ public class CommandEMC extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 1 && args[0].equals("reload")) {
-            EMCRegistry.wipeout();
+            EMCRegistry.reset();
             EMCRegistry.initialize();
         }
     }

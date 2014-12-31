@@ -66,7 +66,7 @@ public class EMCRegistry {
         }
     }
 
-    public static void wipeout() {
+    public static void reset() {
         emcMapping.clear();
         genericEmcMapping.clear();
         blacklist.clear();
