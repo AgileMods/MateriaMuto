@@ -5,9 +5,10 @@ import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaCraftingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaSmeltingScanner;
-import com.agilemods.materiamuto.common.emc.recipe.compat.IC2CraftingScanner;
-import com.agilemods.materiamuto.common.emc.recipe.compat.ThaumcraftCraftingScanner;
-import com.agilemods.materiamuto.common.emc.recipe.compat.ThaumcraftCrucibleScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.ic2.IC2CraftingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.ic2.IC2MetalFormerScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.thaumcraft.ThaumcraftCraftingScanner;
+import com.agilemods.materiamuto.common.emc.recipe.compat.thaumcraft.ThaumcraftCrucibleScanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -187,6 +188,7 @@ public class EMCRegistry {
 
         if (Loader.isModLoaded("IC2")) {
             recipeScanners.add(new IC2CraftingScanner());
+            recipeScanners.add(new IC2MetalFormerScanner());
         }
 
         if (Loader.isModLoaded("Thaumcraft")) {

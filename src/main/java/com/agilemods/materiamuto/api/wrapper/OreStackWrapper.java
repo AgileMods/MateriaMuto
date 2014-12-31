@@ -29,6 +29,10 @@ public class OreStackWrapper implements IStackWrapper {
         this.oreTag = oreTag;
     }
 
+    public String getOreTag() {
+        return oreTag;
+    }
+
     @Override
     public boolean valid() {
         return oreTag != null && !oreTag.isEmpty();

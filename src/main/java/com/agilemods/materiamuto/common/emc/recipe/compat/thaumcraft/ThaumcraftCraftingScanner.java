@@ -1,4 +1,4 @@
-package com.agilemods.materiamuto.common.emc.recipe.compat;
+package com.agilemods.materiamuto.common.emc.recipe.compat.thaumcraft;
 
 import com.agilemods.materiamuto.api.CachedRecipe;
 import com.agilemods.materiamuto.api.IEMCRegistry;
