@@ -32,8 +32,6 @@ public class IC2MetalFormerScanner implements IRecipeScanner {
 
         set.add(output);
 
-        System.out.println(input + " => " + set);
-
         resultMap.put(input, set);
     }
 
