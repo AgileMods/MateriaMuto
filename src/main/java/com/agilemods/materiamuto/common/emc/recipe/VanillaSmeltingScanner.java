@@ -15,10 +15,6 @@ public class VanillaSmeltingScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<VanillaStackWrapper>> smeltingMap = Maps.newHashMap();
 
-    public VanillaSmeltingScanner() {
-        scan();
-    }
-
     private void addRecipe(VanillaStackWrapper input, VanillaStackWrapper output) {
         Set<VanillaStackWrapper> set = smeltingMap.get(output);
         if (set == null) {
@@ -30,7 +26,8 @@ public class VanillaSmeltingScanner implements IRecipeScanner {
         smeltingMap.put(output, set);
     }
 
-    private void scan() {
+    @Override
+    public void scan() {
         for (Map.Entry<ItemStack, ItemStack> entry : (Set<Map.Entry>)FurnaceRecipes.smelting().getSmeltingList().entrySet()) {
             addRecipe(new VanillaStackWrapper(entry.getKey()), new VanillaStackWrapper(entry.getValue()));
         }

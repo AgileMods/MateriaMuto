@@ -20,10 +20,6 @@ public class IC2MetalFormerScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<VanillaStackWrapper>> resultMap = Maps.newHashMap();
 
-    public IC2MetalFormerScanner() {
-        scan();
-    }
-
     private void addRecipe(VanillaStackWrapper input, VanillaStackWrapper output) {
         Set<VanillaStackWrapper> set = resultMap.get(output);
         if (set == null) {
@@ -35,7 +31,8 @@ public class IC2MetalFormerScanner implements IRecipeScanner {
         resultMap.put(input, set);
     }
 
-    private void scan() {
+    @Override
+    public void scan() {
         Map<IRecipeInput, RecipeOutput> recipeMap = Maps.newHashMap();
         recipeMap.putAll(Recipes.metalformerCutting.getRecipes());
         recipeMap.putAll(Recipes.metalformerExtruding.getRecipes());

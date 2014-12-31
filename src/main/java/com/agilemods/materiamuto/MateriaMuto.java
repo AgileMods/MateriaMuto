@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid = LibMisc.MODID, name = LibMisc.MODNAME, version = LibMisc.VERSION, dependencies = LibMisc.DEPENDENCIES)
 public class MateriaMuto {
@@ -22,10 +23,15 @@ public class MateriaMuto {
     @SidedProxy(serverSide = LibMisc.PROXY_COMMON, clientSide = LibMisc.PROXY_CLIENT)
     public static CommonProxy proxy;
 
+    public static Configuration configuration;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         neiLoaded = Loader.isModLoaded("NotEnoughItems");
         thaumcraftLoaded = Loader.isModLoaded("Thaumcraft");
+
+        configuration = new Configuration(event.getSuggestedConfigurationFile());
+        configuration.load();
 
         proxy.preInit(event);
     }

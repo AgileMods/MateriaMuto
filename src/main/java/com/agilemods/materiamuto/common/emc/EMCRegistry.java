@@ -1,5 +1,6 @@
 package com.agilemods.materiamuto.common.emc;
 
+import com.agilemods.materiamuto.MateriaMuto;
 import com.agilemods.materiamuto.api.IRecipeScanner;
 import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
@@ -50,12 +51,28 @@ public class EMCRegistry {
         blacklist.add(VanillaStackWrapper);
     }
 
+    private static boolean canDisable = false;
+
+    public static void addRecipeScanner(IRecipeScanner recipeScanner) {
+        boolean canScan = !canDisable;
+        if (canDisable) {
+            MateriaMuto.configuration.get("recipeScanner", recipeScanner.getClass().getSimpleName(), true).getBoolean(true);
+            MateriaMuto.configuration.save();
+        }
+
+        if (canScan) {
+            recipeScanners.add(recipeScanner);
+            recipeScanner.scan();
+        }
+    }
+
     public static void wipeout() {
         emcMapping.clear();
         genericEmcMapping.clear();
         blacklist.clear();
         recipeScanners.clear();
         tempBlacklist.clear();
+        canDisable = false;
     }
 
     private static void determineEMC(VanillaStackWrapper stackWrapper) {
@@ -183,17 +200,20 @@ public class EMCRegistry {
         initializeLazyValues();
         initializeLazyFluidValues();
 
-        recipeScanners.add(new VanillaCraftingScanner());
-        recipeScanners.add(new VanillaSmeltingScanner());
+        addRecipeScanner(new VanillaCraftingScanner());
+        addRecipeScanner(new VanillaSmeltingScanner());
+
+        // Global flag to determine if recipe scanner should be checked against config
+        canDisable = true;
 
         if (Loader.isModLoaded("IC2")) {
-            recipeScanners.add(new IC2CraftingScanner());
-            recipeScanners.add(new IC2MetalFormerScanner());
+            addRecipeScanner(new IC2CraftingScanner());
+            addRecipeScanner(new IC2MetalFormerScanner());
         }
 
         if (Loader.isModLoaded("Thaumcraft")) {
-            recipeScanners.add(new ThaumcraftCraftingScanner());
-            recipeScanners.add(new ThaumcraftCrucibleScanner());
+            addRecipeScanner(new ThaumcraftCraftingScanner());
+            addRecipeScanner(new ThaumcraftCrucibleScanner());
         }
 
         addFinalValues();

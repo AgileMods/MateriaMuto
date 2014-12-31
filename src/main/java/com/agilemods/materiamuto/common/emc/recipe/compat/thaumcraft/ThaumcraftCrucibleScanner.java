@@ -17,10 +17,6 @@ public class ThaumcraftCrucibleScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<VanillaStackWrapper>> components = Maps.newHashMap();
 
-    public ThaumcraftCrucibleScanner() {
-        scan();
-    }
-
     private void addCatalyst(VanillaStackWrapper result, ItemStack ... catalyst) {
         Set<VanillaStackWrapper> set = components.get(result);
         if (set == null) {
@@ -34,7 +30,8 @@ public class ThaumcraftCrucibleScanner implements IRecipeScanner {
         components.put(result, set);
     }
 
-    private void scan() {
+    @Override
+    public void scan() {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (r instanceof CrucibleRecipe) {
                 CrucibleRecipe crucibleRecipe = (CrucibleRecipe) r;

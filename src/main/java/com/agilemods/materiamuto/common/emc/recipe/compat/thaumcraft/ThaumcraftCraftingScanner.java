@@ -21,10 +21,6 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
 
     private Map<VanillaStackWrapper, Set<CachedRecipe>> outputMaps = Maps.newHashMap();
 
-    public ThaumcraftCraftingScanner() {
-        scan();
-    }
-
     private void addRecipe(VanillaStackWrapper stackWrapper, CachedRecipe recipe) {
         Set<CachedRecipe> set = outputMaps.get(stackWrapper);
         if (set == null) {
@@ -44,7 +40,8 @@ public class ThaumcraftCraftingScanner implements IRecipeScanner {
         outputMaps.put(stackWrapper, set);
     }
 
-    private void scan() {
+    @Override
+    public void scan() {
         for (IRecipe recipe : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
             VanillaStackWrapper stackWrapper = new VanillaStackWrapper(recipe.getRecipeOutput());
             if (recipe instanceof ShapedArcaneRecipe) {
