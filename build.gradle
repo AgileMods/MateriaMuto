@@ -40,7 +40,6 @@ configurations {
 repositories {
     mavenCentral()
     maven { url = "http://agilemods.com/maven" }
-    maven { url = "http://chickenbones.net/maven/" }
     maven { url = "http://maven.ic2.player.to/" }
 }
 
