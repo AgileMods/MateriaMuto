@@ -79,18 +79,15 @@ public class EMCRegistry {
         if (getEMC(stackWrapper, false) <= 0) {
             EMCRegistry.tempBlacklist.add(stackWrapper);
 
-            int count = 0;
             double emc = 0;
 
             for (IRecipeScanner recipeScanner : recipeScanners) {
                 double subEmc = recipeScanner.getEMC(emcDelegate, stackWrapper);
-                if (subEmc > 0) {
-                    count++;
-                    emc += recipeScanner.getEMC(emcDelegate, stackWrapper);
+                if (emc == 0 || subEmc < emc) {
+                    emc = subEmc;
                 }
             }
 
-            emc = emc / (double)count;
             EMCRegistry.setEMC(stackWrapper, emc, false);
 
             EMCRegistry.tempBlacklist.remove(stackWrapper);
