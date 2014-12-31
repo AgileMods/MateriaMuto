@@ -9,7 +9,7 @@ You can see our current roadmap [here](https://trello.com/b/hlodF9HE/materiamuto
 
 ## Clone
 The following steps will ensure your project is cloned properly.  
-1. `git@github.com:PixeLight/MateriaMuto.git`  
+1. `git@github.com:AgileMods/MateriaMuto.git`  
 2. `cd MateriaMuto`
 
 ## Setup
