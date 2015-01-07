@@ -3,8 +3,7 @@ package com.agilemods.materiamuto.client.render.tile;
 import com.agilemods.materiamuto.client.lib.Model;
 import com.agilemods.materiamuto.client.lib.Texture;
 import com.agilemods.materiamuto.client.render.lib.RenderUtil;
-import com.agilemods.materiamuto.common.block.BlockCondenser;
-import com.agilemods.materiamuto.common.tile.TileCondenser;
+import com.agilemods.materiamuto.common.tile.TileAlchemicalChest;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -15,14 +14,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class RenderTileCondenser extends TileEntitySpecialRenderer {
+public class RenderTileAlchemicalChest extends TileEntitySpecialRenderer {
 
-    public void renderCondenserAt(TileCondenser tile, double x, double y, double z, float partial) {
+    public void renderChestAt(TileAlchemicalChest tile, double x, double y, double z, float partial) {
         ForgeDirection direction;
         if (tile.getWorldObj() != null) {
             direction = tile.orientation;
         } else {
-            direction = ForgeDirection.WEST;
+            direction = ForgeDirection.EAST;
         }
 
         GL11.glPushMatrix();
@@ -45,14 +44,21 @@ public class RenderTileCondenser extends TileEntitySpecialRenderer {
 
         GL11.glRotatef(angle, 0.0F, 1.0F, 0.0F);
 
-        Texture.CONDENSER.bindTexture();
+        float adjustedLidAngle = tile.prevLidAngle + (tile.lidAngle - tile.prevLidAngle) * partial;
+        adjustedLidAngle = 1.0F - adjustedLidAngle;
+        adjustedLidAngle = 1.0F - adjustedLidAngle * adjustedLidAngle * adjustedLidAngle;
 
-        float animation = tile.getAnimationInterpolation();
+        Texture.ALCHEMICAL_CHEST.bindTexture();
 
-        Model.CONDENSER.renderAllExcept("top");
-        GL11.glTranslated(0, -(BlockCondenser.OFFSET * animation), 0);
-        Model.CONDENSER.renderOnly("top");
-        GL11.glTranslated(0, BlockCondenser.OFFSET * animation, 0);
+        GL11.glTranslated(0, 0.0625, 0.4375);
+        GL11.glRotated((adjustedLidAngle * 90), 1, 0, 0);
+        GL11.glTranslated(0, -0.0625, -0.4375);
+        Model.ALCHEMICAL_CHESET.renderOnly("top", "latch");
+        GL11.glTranslated(0, 0.0625, 0.4375);
+        GL11.glRotated(-(adjustedLidAngle * 90), 1, 0, 0);
+        GL11.glTranslated(0, -0.0625, -0.4375);
+
+        Model.ALCHEMICAL_CHESET.renderAllExcept("top", "latch");
 
         if (tile.getWorldObj() != null) {
             RenderUtil.enableBrightRendering();
@@ -63,12 +69,17 @@ public class RenderTileCondenser extends TileEntitySpecialRenderer {
 
             GL11.glColor4f(pulse + 0.15F, pulse + 0.15F, pulse + 0.15F, pulse + 0.15F);
 
-            Texture.CONDENSER_OVERLAY.bindTexture();
+            Texture.ALCHEMICAL_CHEST_OVERLAY.bindTexture();
 
-            Model.CONDENSER.renderAllExcept("top");
-            GL11.glTranslated(0, -(BlockCondenser.OFFSET * animation), 0);
-            Model.CONDENSER.renderOnly("top");
-            GL11.glTranslated(0, BlockCondenser.OFFSET * animation, 0);
+            GL11.glTranslated(0, 0.0625, 0.4375);
+            GL11.glRotated((adjustedLidAngle * 90), 1, 0, 0);
+            GL11.glTranslated(0, -0.0625, -0.4375);
+            Model.ALCHEMICAL_CHESET.renderOnly("top", "latch");
+            GL11.glTranslated(0, 0.0625, 0.4375);
+            GL11.glRotated(-(adjustedLidAngle * 90), 1, 0, 0);
+            GL11.glTranslated(0, -0.0625, -0.4375);
+
+            Model.ALCHEMICAL_CHESET.renderAllExcept("top", "latch");
 
             RenderUtil.disableBrightRendering();
         }
@@ -79,6 +90,6 @@ public class RenderTileCondenser extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partial) {
-        renderCondenserAt((TileCondenser) tile, x, y, z, partial);
+        renderChestAt((TileAlchemicalChest) tile, x, y, z, partial);
     }
 }

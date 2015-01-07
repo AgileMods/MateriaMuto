@@ -40,7 +40,7 @@ public class ItemAlchemicalBag extends MMSubItem {
         if (!itemStack.getTagCompound().hasKey("target")) {
             itemStack.getTagCompound().setString("target", entityPlayer.getCommandSenderName());
         }
-        GuiHandler.Type.GUI_ALCHEMICAL_CHEST.openGui(entityPlayer);
+        GuiHandler.Type.GUI_ALCHEMICAL_BAG.openGui(entityPlayer);
         return itemStack;
     }
 

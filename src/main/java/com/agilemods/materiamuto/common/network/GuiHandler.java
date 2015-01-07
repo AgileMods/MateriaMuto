@@ -1,5 +1,8 @@
 package com.agilemods.materiamuto.common.network;
 
+import com.agilemods.materiamuto.client.gui.GuiAlchemicalChest;
+import com.agilemods.materiamuto.common.inventory.ContainerAlchemicalChest;
+import com.agilemods.materiamuto.common.tile.TileAlchemicalChest;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -13,8 +16,9 @@ import com.agilemods.materiamuto.common.tile.TileCondenser;
 public class GuiHandler implements IGuiHandler {
 
     public static enum Type {
-        GUI_ALCHEMICAL_CHEST,
-        GUI_CONDENSER;
+        GUI_ALCHEMICAL_BAG,
+        GUI_CONDENSER,
+        GUI_ALCHEMICAL_CHEST;
 
         public void openGui(EntityPlayer entityPlayer) {
             openGui(entityPlayer, 0, 0, 0);
@@ -42,10 +46,12 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int id, EntityPlayer entityPlayer, World world, int x, int y, int z) {
         Type type = Type.get(id);
         switch (type) {
-            case GUI_ALCHEMICAL_CHEST:
+            case GUI_ALCHEMICAL_BAG:
                 return new ContainerAlchemicalBag(entityPlayer, entityPlayer.getHeldItem());
             case GUI_CONDENSER:
                 return new ContainerCondenser(entityPlayer, (TileCondenser) world.getTileEntity(x, y, z));
+            case GUI_ALCHEMICAL_CHEST:
+                return new ContainerAlchemicalChest(entityPlayer, (TileAlchemicalChest) world.getTileEntity(x, y, z));
         }
         return null;
     }
@@ -54,10 +60,12 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int id, EntityPlayer entityPlayer, World world, int x, int y, int z) {
         Type type = Type.get(id);
         switch (type) {
-            case GUI_ALCHEMICAL_CHEST:
+            case GUI_ALCHEMICAL_BAG:
                 return new GuiAlchemicalBag(entityPlayer, entityPlayer.getHeldItem());
             case GUI_CONDENSER:
                 return new GuiCondenser(entityPlayer, (TileCondenser) world.getTileEntity(x, y, z));
+            case GUI_ALCHEMICAL_CHEST:
+                return new GuiAlchemicalChest(entityPlayer, (TileAlchemicalChest) world.getTileEntity(x, y, z));
         }
         return null;
     }

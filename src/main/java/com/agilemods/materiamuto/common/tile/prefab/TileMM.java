@@ -6,8 +6,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileMM extends TileEntity {
+
+    public ForgeDirection orientation = ForgeDirection.UNKNOWN;
 
     public void writeCustomNBT(NBTTagCompound nbtTagCompound) {
 
@@ -23,12 +26,14 @@ public class TileMM extends TileEntity {
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
+        nbtTagCompound.setByte("orientation", (byte) orientation.ordinal());
         writeCustomNBT(nbtTagCompound);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
+        orientation = ForgeDirection.getOrientation(nbtTagCompound.getByte("orientation"));
         readCustomNBT(nbtTagCompound);
     }
 

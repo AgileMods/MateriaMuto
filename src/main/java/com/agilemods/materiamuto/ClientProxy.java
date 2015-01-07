@@ -4,9 +4,12 @@ import com.agilemods.materiamuto.client.core.handlers.ItemTooltipEventHandler;
 import com.agilemods.materiamuto.client.core.handlers.KeyInputEventHandler;
 import com.agilemods.materiamuto.client.core.settings.Keybindings;
 import com.agilemods.materiamuto.client.model.importer.TechneModelLoader;
+import com.agilemods.materiamuto.client.render.item.RenderItemAlchemicalChest;
 import com.agilemods.materiamuto.client.render.item.RenderItemCondenser;
+import com.agilemods.materiamuto.client.render.tile.RenderTileAlchemicalChest;
 import com.agilemods.materiamuto.client.render.tile.RenderTileCondenser;
 import com.agilemods.materiamuto.common.core.MMBlocks;
+import com.agilemods.materiamuto.common.tile.TileAlchemicalChest;
 import com.agilemods.materiamuto.common.tile.TileCondenser;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -36,6 +39,9 @@ public class ClientProxy extends CommonProxy {
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileCondenser.class, new RenderTileCondenser());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MMBlocks.condenser), new RenderItemCondenser());
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileAlchemicalChest.class, new RenderTileAlchemicalChest());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MMBlocks.alchemicalChest), new RenderItemAlchemicalChest());
     }
 
     @Override
