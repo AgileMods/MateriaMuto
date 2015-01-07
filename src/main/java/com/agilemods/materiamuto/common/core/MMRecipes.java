@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MMRecipes {
 
@@ -36,5 +37,41 @@ public class MMRecipes {
                 Items.diamond,
                 new ItemStack(Items.coal, 1, 0)
         );
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                MMBlocks.alchemicalChest,
+                "LMH",
+                "SDS",
+                "ICI",
+                'L', dustLow,
+                'M', dustMedium,
+                'H', dustHigh,
+                'S', "stone",
+                'D', Items.diamond,
+                'I', Items.iron_ingot,
+                'C', "chestWood"
+        ));
+
+        GameRegistry.addShapedRecipe(
+                new ItemStack(MMBlocks.condenser),
+                "ODO",
+                "DCD",
+                "ODO",
+                'O', Blocks.obsidian,
+                'D', Items.diamond,
+                'C', MMBlocks.alchemicalChest
+        );
+
+        for (int i=0; i<16; i++) {
+            GameRegistry.addShapedRecipe(
+                    new ItemStack(MMItems.alchemicalBag, 1, i),
+                    "DDD",
+                    "WCW",
+                    "WWW",
+                    'D', dustHigh,
+                    'W', new ItemStack(Blocks.wool, 1, i),
+                    'C', MMBlocks.alchemicalChest
+            );
+        }
     }
 }
