@@ -2,9 +2,10 @@ package com.agilemods.materiamuto;
 
 import com.agilemods.materiamuto.common.core.MMBlocks;
 import com.agilemods.materiamuto.common.core.MMEntities;
-import com.agilemods.materiamuto.common.item.MMItems;
+import com.agilemods.materiamuto.common.core.MMItems;
 import com.agilemods.materiamuto.common.network.GuiHandler;
 import com.agilemods.materiamuto.common.network.packet.PacketHandler;
+import com.agilemods.materiamuto.common.core.MMRecipes;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -18,6 +19,7 @@ public class CommonProxy {
         MMBlocks.init();
         MMItems.init();
         MMEntities.init();
+        MMRecipes.initialize();
 
         PacketHandler.init();
 

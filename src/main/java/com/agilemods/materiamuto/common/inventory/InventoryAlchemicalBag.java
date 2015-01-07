@@ -5,7 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import com.agilemods.materiamuto.common.core.helpers.InventoryHelper;
-import com.agilemods.materiamuto.common.item.MMItems;
+import com.agilemods.materiamuto.common.core.MMItems;
 
 public class InventoryAlchemicalBag implements IInventory {
 

@@ -1,5 +1,6 @@
-package com.agilemods.materiamuto.common.item;
+package com.agilemods.materiamuto.common.core;
 
+import com.agilemods.materiamuto.common.item.*;
 import com.agilemods.materiamuto.common.item.baubles.ItemBlackHoleBand;
 import com.agilemods.materiamuto.common.item.baubles.ItemBodyStone;
 import com.agilemods.materiamuto.common.item.baubles.ItemEvertideAmulet;
@@ -20,7 +21,7 @@ import com.agilemods.materiamuto.common.lib.LibItemNames;
 
 public class MMItems {
 
-    public static Item dust;
+    public static Item covalenceDust;
     public static Item alchemicalFuel;
     public static Item kleinStar;
     public static Item matter;
@@ -44,7 +45,7 @@ public class MMItems {
     public static Item ironBand;
 
     public static void init() {
-        dust = new ItemCovalenceDust().setUnlocalizedName(LibItemNames.COVALENCE_DUST);
+        covalenceDust = new ItemCovalenceDust().setUnlocalizedName(LibItemNames.COVALENCE_DUST);
         alchemicalFuel = new ItemAlchemicalFuel().setUnlocalizedName(LibItemNames.ALCHEMICAL_FUEL);
         kleinStar = new ItemKleinStar().setUnlocalizedName(LibItemNames.KLEIN_STAR);
         matter = new ItemMatter().setUnlocalizedName(LibItemNames.MATTER);
@@ -68,7 +69,7 @@ public class MMItems {
         harvestGodessRing = new ItemHarvestGodessRing().setUnlocalizedName(LibItemNames.HARVEST_RING);
         ironBand = new ItemIronBand().setUnlocalizedName(LibItemNames.IRON_BAND);
 
-        registerItem(dust);
+        registerItem(covalenceDust);
         registerItem(alchemicalFuel);
         registerItem(kleinStar);
         registerItem(matter);

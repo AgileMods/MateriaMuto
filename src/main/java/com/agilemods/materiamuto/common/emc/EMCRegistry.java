@@ -197,6 +197,8 @@ public class EMCRegistry {
         initializeLazyValues();
         initializeLazyFluidValues();
 
+        FuelRegistry.initialize();
+
         addRecipeScanner(new VanillaCraftingScanner());
         addRecipeScanner(new VanillaSmeltingScanner());
 

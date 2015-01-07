@@ -39,8 +39,14 @@ public class BlockCondenser extends MMTileBlock {
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
         TileCondenser tile = (TileCondenser) world.getTileEntity(x, y, z);
         if (tile != null) {
-            return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX,
-                                                (double) y + this.maxY - (tile.getAnimationInterpolation() * OFFSET), (double) z + this.maxZ);
+            return AxisAlignedBB.getBoundingBox(
+                    (double) x + this.minX,
+                    (double) y + this.minY,
+                    (double) z + this.minZ,
+                    (double) x + this.maxX,
+                    (double) y + this.maxY - (tile.getAnimationInterpolation() * OFFSET),
+                    (double) z + this.maxZ
+            );
         } else {
             return super.getCollisionBoundingBoxFromPool(world, x, y, z);
         }
@@ -50,8 +56,14 @@ public class BlockCondenser extends MMTileBlock {
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         TileCondenser tile = (TileCondenser) world.getTileEntity(x, y, z);
         if (tile != null) {
-            return AxisAlignedBB.getBoundingBox((double) x + this.minX, (double) y + this.minY, (double) z + this.minZ, (double) x + this.maxX,
-                                                (double) y + this.maxY - (tile.getAnimationInterpolation() * OFFSET), (double) z + this.maxZ);
+            return AxisAlignedBB.getBoundingBox(
+                    (double) x + this.minX,
+                    (double) y + this.minY,
+                    (double) z + this.minZ,
+                    (double) x + this.maxX,
+                    (double) y + this.maxY - (tile.getAnimationInterpolation() * OFFSET),
+                    (double) z + this.maxZ
+            );
         } else {
             return super.getCollisionBoundingBoxFromPool(world, x, y, z);
         }

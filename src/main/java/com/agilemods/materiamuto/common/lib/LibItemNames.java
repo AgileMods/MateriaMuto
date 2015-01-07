@@ -2,7 +2,7 @@ package com.agilemods.materiamuto.common.lib;
 
 public class LibItemNames {
 
-    public static final String COVALENCE_DUST = "dust";
+    public static final String COVALENCE_DUST = "covalenceDust";
     public static final String ALCHEMICAL_FUEL = "alchemicalFuel";
     public static final String KLEIN_STAR = "kleinStar";
     public static final String MATTER = "matter";
