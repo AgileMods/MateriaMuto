@@ -255,6 +255,8 @@ public class EMCRegistry {
         setEMC(Items.blaze_rod, 1536);
         setEMC(Items.bone, 144);
         setEMC(Items.carrot, 64);
+        setEMC(new ItemStack(Items.coal, 1, 0), 128);
+        setEMC(new ItemStack(Items.coal, 1, 1), 32);
         setEMC(Items.chicken, 64);
         setEMC(Items.clay_ball, 16);
         setEMC(Items.diamond, 8192);
@@ -316,7 +318,6 @@ public class EMCRegistry {
         setEMC_wild(Blocks.sapling, 32);
         setEMC_wild(Blocks.tallgrass, 1);
         setEMC_wild(Blocks.yellow_flower, 16);
-        setEMC_wild(Items.coal, 128);
         setEMC_wild(Items.fish, 64);
         setEMC_wild(Items.potato, 64);
 
