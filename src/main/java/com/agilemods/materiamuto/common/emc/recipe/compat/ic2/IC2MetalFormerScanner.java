@@ -53,13 +53,13 @@ public class IC2MetalFormerScanner implements IRecipeScanner {
     }
 
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
-        double emc = 0;
+        double emc = Double.MAX_VALUE;
 
         Set<VanillaStackWrapper> set = resultMap.get(vanillaStackWrapper);
         if (set != null) {
             for (VanillaStackWrapper input : set) {
                 double subEmc = input.getEMC();
-                if (emc == 0 || subEmc < emc) {
+                if (subEmc > 0 && subEmc < emc) {
                     emc = subEmc;
                 }
             }

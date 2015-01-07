@@ -12,12 +12,13 @@ import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.RecipeInputOreDict;
 import ic2.core.AdvRecipe;
 import ic2.core.AdvShapelessRecipe;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class IC2CraftingScanner implements IRecipeScanner {
 
@@ -95,13 +96,13 @@ public class IC2CraftingScanner implements IRecipeScanner {
 
     @Override
     public double getEMC(IEMCRegistry emcRegistry, VanillaStackWrapper vanillaStackWrapper) {
-        double emc = 0;
+        double emc = Double.MAX_VALUE;
 
         Set<CachedRecipe> recipeSet = outputMaps.get(vanillaStackWrapper);
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
                 double subEmc = cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
-                if (emc == 0 || subEmc < emc) {
+                if (subEmc > 0 && subEmc < emc) {
                     emc = subEmc;
                 }
             }

@@ -6,7 +6,7 @@ public class ItemCovalenceDust extends MMSubItem {
 
     public static final String[] DUSTS = new String[]{"low", "medium", "high"};
 
-    ItemCovalenceDust() {
+    public ItemCovalenceDust() {
         super();
         setHasSubtypes(true);
     }

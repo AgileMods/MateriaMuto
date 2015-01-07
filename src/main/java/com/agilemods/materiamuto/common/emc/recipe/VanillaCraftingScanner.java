@@ -66,7 +66,7 @@ public class VanillaCraftingScanner implements IRecipeScanner {
         if (recipeSet != null) {
             for (CachedRecipe cachedRecipe : recipeSet) {
                 double subEmc = cachedRecipe.getEMC() / cachedRecipe.result.stackSize;
-                if (emc == 0 || subEmc < emc) {
+                if (subEmc > 0 && subEmc < emc) {
                     emc = subEmc;
                 }
             }

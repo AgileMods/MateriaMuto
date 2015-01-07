@@ -6,7 +6,7 @@ public class ItemAlchemicalFuel extends MMSubItem {
 
     public static final String[] FUELS = new String[]{"alchemical", "mobius", "aeternalis"};
 
-    ItemAlchemicalFuel() {
+    public ItemAlchemicalFuel() {
         super();
         setHasSubtypes(true);
     }
