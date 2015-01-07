@@ -1,11 +1,9 @@
 package com.agilemods.materiamuto.common.config.data;
 
-import com.agilemods.materiamuto.common.config.Category;
-import com.agilemods.materiamuto.common.config.Name;
+import com.agilemods.materiamuto.common.config.Constant;
 
 public class EMCConstants {
 
-    @Name("maxEmc")
-    @Category("condenser")
+    @Constant(name = "maxEmc", category = "collector")
     public static double CONDENSER_MAX_EMC = 500000000;
 }

@@ -25,27 +25,31 @@ public class ConfigLoader {
     }
 
     private static void handleField(String clazz, Field field) throws IllegalAccessException {
-        Category category = field.getAnnotation(Category.class);
-        Description description = field.getAnnotation(Description.class);
-        Name name = field.getAnnotation(Name.class);
+        Constant constant = field.getAnnotation(Constant.class);
+        if (constant == null)
+            return;
 
-        if (category != null && !category.value().isEmpty()) {
-            clazz = clazz + "." + category.value();
+        String name = constant.name();
+        String category = constant.category();
+        String description = constant.description();
+
+        if (category != null && !category.isEmpty()) {
+            clazz = clazz + "." + category;
         }
 
         String fieldName = field.getName();
-        if (name != null && !name.value().isEmpty()) {
-            fieldName = name.value();
+        if (name != null && !name.isEmpty()) {
+            fieldName = name;
         }
 
         FieldType fieldType = FieldType.getType(field);
         Property property;
-        if (description != null && !description.value().isEmpty()) {
+        if (description != null && !description.isEmpty()) {
             property = getProperty(
                     MateriaMuto.configuration,
                     clazz,
                     fieldName,
-                    description.value(),
+                    description,
                     fieldType,
                     field.get(null)
             );
