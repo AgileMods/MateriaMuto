@@ -4,6 +4,7 @@ import com.agilemods.materiamuto.MateriaMuto;
 import com.agilemods.materiamuto.api.IRecipeScanner;
 import com.agilemods.materiamuto.api.wrapper.IStackWrapper;
 import com.agilemods.materiamuto.api.wrapper.VanillaStackWrapper;
+import com.agilemods.materiamuto.common.core.MMItems;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaCraftingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.VanillaSmeltingScanner;
 import com.agilemods.materiamuto.common.emc.recipe.compat.ic2.IC2CraftingScanner;
@@ -249,6 +250,9 @@ public class EMCRegistry {
         setEMC(Blocks.vine, 8);
         setEMC(Blocks.waterlily, 16);
         setEMC(Blocks.web, 12);
+        setEMC(new ItemStack(MMItems.alchemicalFuel, 1, 0), 512);
+        setEMC(new ItemStack(MMItems.alchemicalFuel, 1, 1), 2048);
+        setEMC(new ItemStack(MMItems.alchemicalFuel, 1, 2), 8192);
         setEMC(Items.apple, 128);
         setEMC(Items.beef, 64);
         setEMC(Items.blaze_powder, 768);

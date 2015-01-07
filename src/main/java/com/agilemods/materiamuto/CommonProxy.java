@@ -1,5 +1,7 @@
 package com.agilemods.materiamuto;
 
+import com.agilemods.materiamuto.common.config.ConfigLoader;
+import com.agilemods.materiamuto.common.config.data.EMCConstants;
 import com.agilemods.materiamuto.common.core.MMBlocks;
 import com.agilemods.materiamuto.common.core.MMEntities;
 import com.agilemods.materiamuto.common.core.MMItems;
@@ -26,6 +28,8 @@ public class CommonProxy {
         NetworkRegistry.INSTANCE.registerGuiHandler(MateriaMuto.instance, new GuiHandler());
 
         AlchemicalBagHandler.register();
+
+        ConfigLoader.loadClass(EMCConstants.class);
     }
 
     public void init(FMLInitializationEvent event) {

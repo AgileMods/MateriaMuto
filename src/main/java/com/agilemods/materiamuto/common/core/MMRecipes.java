@@ -13,6 +13,7 @@ public class MMRecipes {
         ItemStack dustMedium = new ItemStack(MMItems.covalenceDust, 40, 1);
         ItemStack dustHigh = new ItemStack(MMItems.covalenceDust, 40, 2);
 
+        // Low Dust
         GameRegistry.addShapelessRecipe(
                 dustLow,
                 Blocks.cobblestone,
@@ -26,18 +27,21 @@ public class MMRecipes {
                 new ItemStack(Items.coal, 1, 1)
         );
 
+        // Medium Dust
         GameRegistry.addShapelessRecipe(
                 dustMedium,
                 Items.iron_ingot,
                 Items.redstone
         );
 
+        // High Dust
         GameRegistry.addShapelessRecipe(
                 dustHigh,
                 Items.diamond,
                 new ItemStack(Items.coal, 1, 0)
         );
 
+        // Alchemical Chest
         GameRegistry.addRecipe(new ShapedOreRecipe(
                 MMBlocks.alchemicalChest,
                 "LMH",
@@ -52,6 +56,7 @@ public class MMRecipes {
                 'C', "chestWood"
         ));
 
+        // Condenser
         GameRegistry.addShapedRecipe(
                 new ItemStack(MMBlocks.condenser),
                 "ODO",
@@ -62,6 +67,7 @@ public class MMRecipes {
                 'C', MMBlocks.alchemicalChest
         );
 
+        // Alchemical Bag
         for (int i=0; i<16; i++) {
             GameRegistry.addShapedRecipe(
                     new ItemStack(MMItems.alchemicalBag, 1, i),
@@ -73,5 +79,25 @@ public class MMRecipes {
                     'C', MMBlocks.alchemicalChest
             );
         }
+
+        // Dark Matter
+        GameRegistry.addShapedRecipe(
+                new ItemStack(MMItems.matter, 1, 0),
+                "AAA",
+                "ADA",
+                "AAA",
+                'A', new ItemStack(MMItems.alchemicalFuel, 1, 2),
+                'D', Blocks.diamond_block
+        );
+
+        // Red Matter
+        GameRegistry.addShapedRecipe(
+                new ItemStack(MMItems.matter, 1, 1),
+                "AAA",
+                "MMM",
+                "AAA",
+                'A', new ItemStack(MMItems.alchemicalFuel, 1, 2),
+                'M', new ItemStack(MMItems.matter, 1, 0)
+        );
     }
 }

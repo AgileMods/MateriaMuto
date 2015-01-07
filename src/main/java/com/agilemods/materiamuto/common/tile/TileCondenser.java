@@ -1,5 +1,6 @@
 package com.agilemods.materiamuto.common.tile;
 
+import com.agilemods.materiamuto.common.config.data.EMCConstants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,6 @@ import com.agilemods.materiamuto.common.emc.EMCRegistry;
 import com.agilemods.materiamuto.common.tile.prefab.TileMM;
 
 public class TileCondenser extends TileMM implements IInventory {
-
-    public static final double MAX_EMC = 500000000;
 
     public static final int TARGET_SLOT = 91;
     public static final int INVENTORY_SIZE = 92;
@@ -57,7 +56,7 @@ public class TileCondenser extends TileMM implements IInventory {
                     ItemStack itemStack = getStackInSlot(i);
                     double emc = EMCRegistry.getEMC(itemStack);
 
-                    if (itemStack != null && emc > 0 && (this.emc + emc) <= MAX_EMC) {
+                    if (itemStack != null && emc > 0 && (this.emc + emc) <= EMCConstants.CONDENSER_MAX_EMC) {
                         if (itemStack.isItemEqual(targetStack)) {
                             continue;
                         }
