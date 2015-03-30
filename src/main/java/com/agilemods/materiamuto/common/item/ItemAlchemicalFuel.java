@@ -18,6 +18,6 @@ public class ItemAlchemicalFuel extends MMSubItem {
 
     @Override
     public String getIconPrefix() {
-        return "fuels/";
+        return "fuels";
     }
 }

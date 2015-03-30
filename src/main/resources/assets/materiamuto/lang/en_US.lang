@@ -18,10 +18,17 @@ item.alchemicalBag.green.name=Alchemical Bag (Green)
 item.alchemicalBag.red.name=Alchemical Bag (Red)
 item.alchemicalBag.black.name=Alchemical Bag (Black)
 
+#Blocks
+tile.condenser.name=Condenser
+tile.alchemicalChest.name=Alchemical Chest
+
 #Covalence Dusts
-item.dust.low.name=Low Covalence Dust
-item.dust.medium.name=Medium Covalence Dust
-item.dust.high.name=High Covalence Dust
+item.covalenceDust.low.name=Low Covalence Dust
+item.covalenceDust.medium.name=Medium Covalence Dust
+item.covalenceDust.high.name=High Covalence Dust
+
+#Elder Knowledge
+item.elderKnowledge.name=Elder Knowledge
 
 # Matters
 item.matter.dark.name=Dark Matter
@@ -41,12 +48,26 @@ item.alchemicalFuel.mobius.name=Mobius Fuel
 item.alchemicalFuel.aeternalis.name=Aeternalis Fuel
 
 #Rings, Amulets etc
-item.blackHoleRing.name=Black Hole Band
 item.archangelSmiteRing.name=Archangels Smite
+item.blackHoleRing.name=Black Hole Band
+item.evertideAmulet.name=Evertide Amulet
+item.harvestGodessRing.name=Harvest Godess Ring
+item.ironBand.name=Iron Band
+item.ignitionRing.name=Ignition Ring
+item.swiftwolfsRendingGale.name=Swiftwolf's Rending Gale
 item.repairTalismanAmulet.name=Repair Talisman
+item.volcanicAmulet.name=Volcanic Amulet
+item.zeroRing.name=Zero Ring
+
 
 #Enchantment Scroll
 item.enchantmentScroll.name=Enchantment Scroll
+
+#Stones
+item.bodyStone.name=Body Stone
+item.soulStone.name=Soul Stone
+item.lifeStone.name=Life Stone
+item.mindStone.name=Mind Stone
 
 # Block localizations
 
